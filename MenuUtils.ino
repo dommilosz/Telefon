@@ -55,21 +55,32 @@ void DrawCurrentMenu() {
       lcd.print(BufferToString(board_buffor, board_buffi));
       lcd.print(" : ");
       lcd.print(millis() - lastInt);
-    }else{
+    } else {
       lcd.print(LastMenuMsg);
     }
   }
 
-  if (menu == 1) {
+  if (menu == MenuSelect_MENU_ID) {
     MenuSelect_Draw();
   }
-  if (menu == 2) {
+  if (menu == MenuStatus_MENU_ID) {
     MenuStatus_Draw();
   }
-  if (menu == 3) {
+  if (menu == MenuTimings_MENU_ID) {
     MenuTimings_Draw();
   }
-  if (menu == 4) {
+  if (menu == MenuSMS_MENU_ID) {
     MenuSMS_Draw();
+  }
+  if (menu == MenuSMS_PRE_MENU_ID) {
+    MenuSMS_PRE_Draw();
+  }
+
+  if (menu == MenuSMS_View_MENU_ID) {
+    MenuSMS_View_Draw();
+  }
+
+  if (menu == MenuSMS_TV_MENU_ID) {
+    MenuSMS_TV_Draw();
   }
 }

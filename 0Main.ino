@@ -1,6 +1,6 @@
 void setup() {
   Serial.begin(115200);
-  Serial2.begin(9600);
+  Serial2.begin(115200);
 
   Serial2.print("AT\r");
   //Serial2.readStringUntil("OK");
@@ -20,15 +20,25 @@ void loop() {
   AT_STATUS = STATUS_OK;
   while (Serial.available()) {
     char c = Serial.read();
-    if(c=='\r'){
+    if (c == '\r') {
       Command(buff);
       buff = "";
     }
-    buff+=c;
+    buff += c;
+    if (c == '#') {
+      if (Serial.read() == 'm') {
+        board_buffi = 1;
+        String s = "";
+        s += (char)Serial.read();
+        board_buffor[0] = s.toInt();
+        HandleBuffer();
+      }
+      buff = "";
+    }
   }
 
   while (Serial2.available()) {
-    /*Serial.write*/(Serial2.read());
+    Serial.write(Serial2.read());
   }
 
   CheckConnection();

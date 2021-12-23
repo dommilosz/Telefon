@@ -31,6 +31,10 @@ void loop1() {
   }
   if ((current - last500) >= 500) {
     loop_500ms();
+    loopI500++;
+    if (loopI500 > 999) {
+      loopI500 = 0;
+    }
     last500 = millis();
   }
   if ((current - last1000) >= 1000) {
@@ -47,23 +51,40 @@ void HandleBuffer() {
     return;
   }
 
-  if (menu == 1) {
+  if (menu == MenuSelect_MENU_ID) {
     MenuSelect_Action(board_buffor[0]);
     board_buffi = 0;
     return;
   }
-  if (menu == 2) {
+  if (menu == MenuStatus_MENU_ID) {
     MenuStatus_Action(board_buffor[0]);
     board_buffi = 0;
     return;
   }
-  if (menu == 3) {
+  if (menu == MenuTimings_MENU_ID) {
     MenuTimings_Action(board_buffor[0]);
     board_buffi = 0;
     return;
   }
-  if(menu == 4){
+  if (menu == MenuSMS_MENU_ID) {
     MenuSMS_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+  if (menu == MenuSMS_PRE_MENU_ID) {
+    MenuSMS_PRE_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if (menu == MenuSMS_View_MENU_ID) {
+    MenuSMS_View_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if (menu == MenuSMS_TV_MENU_ID) {
+    MenuSMS_TV_Action(board_buffor[0]);
     board_buffi = 0;
     return;
   }

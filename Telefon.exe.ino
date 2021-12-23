@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal_I2C_Wire1.h>
+#include <GSMSim.h>
 
 #define PIN_INPUT 2
 #define InputRead() digitalRead(PIN_INPUT)
@@ -20,7 +21,7 @@
 
 const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "BOARD", "CALL"};
 const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", "roam", "smsfull"};
-const char *MENUS[] = {"MAIN", "SEL", "STA","TIME","SMS"};
+
 
 long lastts = 0;
 String b = "";
@@ -30,8 +31,8 @@ long lastCREG = 0;
 
 uint8_t AT_STATUS = STATUS_OK;
 uint8_t _AT_STATUS = STATUS_OK;
-uint8_t last_reg_status = STATUS_UNREG;
 int loopI = 0;
+int loopI500 = 0;
 int menu = 0;
 int menuItem = 0;
 
@@ -42,11 +43,14 @@ int board_buffi = 0;
 int board_count = 0;
 long lastInt = 0;
 byte sms_page = 0;
+int sms_menu_item = 0;
+int selected_sms = -1;
 
 String LastMenuMsg = "";
 
 Adafruit_NeoPixel pixels(1, PIN_RGB, NEO_GRB + NEO_KHZ800);
 LiquidCrystal_I2C_Wire1 lcd(0x27, 20, 4);
+GSMSim gsm(Serial2);
 
 typedef void (* voidFunc)();
 
@@ -62,12 +66,30 @@ void InvokeOnWorker(voidFunc func) {
 
 void ExecuteQueue() {
   if (invokePointer > 0) {
+    
+    InvokeQueue[invokePointer-1]();
     invokePointer--;
-    InvokeQueue[invokePointer]();
   }
 }
 
-struct SMSStruct{
+struct SMSStruct2{
+  SMSStruct sms;
   int id;
-  String state,address,idk,date,data;
 };
+
+const char *MenuStdExit_MENU[1] = {"EXIT"};
+const char *MENUS[] = {"MAIN", "SEL", "STA","TIME","SMS","SMSP","VIEW","STV"};
+
+const byte MenuSelect_MENU_LEN = 4;
+const char *MenuSelect_MENU[MenuSelect_MENU_LEN] = {"EXIT", "STATUS", "TIMINGS", "SMS"};
+const byte MenuStatus_MENU_LEN = 1;
+
+const byte MenuSelect_MENU_ID = 1;
+const byte MenuStatus_MENU_ID = 2;
+const byte MenuTimings_MENU_ID = 3;
+const byte MenuSMS_MENU_ID = 4;
+const byte MenuSMS_PRE_MENU_ID = 5;
+const byte MenuSMS_View_MENU_ID = 6;
+const byte MenuSMS_TV_MENU_ID = 7;
+
+String l_status = "ALL";
