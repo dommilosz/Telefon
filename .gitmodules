@@ -1,0 +1,3 @@
+[submodule "GSMSim"]
+	path = GSMSim
+	url = https://github.com/dommilosz/GSMSim
