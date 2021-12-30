@@ -1,5 +1,5 @@
 #include <Adafruit_NeoPixel.h>
-#include <LiquidCrystal_I2C_Wire1.h>
+#include <LiquidCrystal_I2C.h>
 #include <GSMSim.h>
 
 #define PIN_INPUT 2
@@ -49,7 +49,7 @@ int selected_sms = -1;
 String LastMenuMsg = "";
 
 Adafruit_NeoPixel pixels(1, PIN_RGB, NEO_GRB + NEO_KHZ800);
-LiquidCrystal_I2C_Wire1 lcd(0x27, 20, 4);
+LiquidCrystal_I2C lcd(0x27, 20, 4, &Wire1);
 GSMSim gsm(Serial2);
 
 typedef void (* voidFunc)();

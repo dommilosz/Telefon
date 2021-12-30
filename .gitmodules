@@ -1,3 +1,6 @@
-[submodule "GSMSim"]
-	path = GSMSim
+[submodule "libraries/LiquidCrystal_I2C"]
+	path = libraries/LiquidCrystal_I2C
+	url = https://github.com/dommilosz/LiquidCrystal_I2C
+[submodule "libraries/GSMSim"]
+	path = libraries/GSMSim
 	url = https://github.com/dommilosz/GSMSim
