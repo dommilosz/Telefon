@@ -5,14 +5,15 @@ bool TestAT() {
 GSMStatus status_cache;
 
 void VoiceCall(String * number) {
-  String cmd = "ATD+48";
-  cmd += *number;
-  cmd += ";";
-  String resp = Command(cmd);
-  if (resp != "OK") {
+  bool resp = gsm.call(number);
+  if (!resp) {
     LastMenuMsg = "ERR: " + resp;
   }
 }
+
+String op_name = "";
+unsigned int pin_status = -1;
+bool pin_enabled = false;
 
 void CheckConnection() {
   long current = millis();
@@ -20,10 +21,11 @@ void CheckConnection() {
   long diffAT = current - lastAT;
   long diffCREG = current - lastCREG;
 
+  //Serial.println(lastOK);
   if (diffOK > 15000) {
     AT_STATUS = STATUS_NOAT;
     if (diffAT > 500) {
-      Serial2.begin(9600);
+      //Serial2.begin(9600);
       if (TestAT()) {
         lastOK = millis();
       }
@@ -38,27 +40,30 @@ void CheckConnection() {
     }
   }
 
-  if (diffAT > 500 && (diffCREG > 15000 || (diffCREG > 5000 && !status_cache.service))) {
+  if (diffAT > 500 && (diffCREG > 30000 || (diffCREG > 5000 && !status_cache.service))) {
     //+CIND: 5,0,0,0,0,0,1
     //+CIND:("battchg",(0-5)), ("signal",(0-5)), ("service",(0,1)), ("message",(0,1)),("call",(0,1)), ("roam",(0,1)), ("smsfull",(0,1))
     status_cache = gsm.getStatus();
     lastCREG = millis();
+    op_name = String(gsm.operatorNameFromSim());
+    FetchPIN();
   }
 
-  if (!status_cache.service) {
+  if (status_cache.service != 1) {
     AT_STATUS = STATUS_UNREG;
   }
-  if (status_cache.call) {
+  if (status_cache.call == 1) {
     AT_STATUS = STATUS_CALL;
   }
+  if (pin_status != 0) {
+    if (pin_status == 1) {
+      LastMenuMsg = "ENTER PIN";
+    }
+    if (pin_status == 2) {
+      LastMenuMsg = "ENTER PUK";
+    }
+  }
 
-}
-
-String Command(String cmd) {
-  Serial.print("\n> " + cmd + "\n");
-  FlushSerial2();
-  Serial2.print(cmd + "\r");
-  return ReadResponse();
 }
 
 SMSStruct smses[128];
@@ -66,3 +71,23 @@ SMSStruct *vsmses[128];
 SMSStruct *current_sms;
 int sms_count = 0;
 int sms_pages_count = 0;
+
+int MemUsage[] = {0, 0};
+
+void FetchUsage() {
+  gsm.getPreferredSMSStorage(MemUsage);
+}
+
+void FetchPIN() {
+  pin_status = gsm.pinStatus();
+  int pe = gsm.getPinStatus();
+  if (pe == 0) {
+    pin_enabled = false;
+  }
+  else if (pe == 1) {
+    pin_enabled = true;
+  } else {
+    Serial.println("E57");
+    Serial.println(pe);
+  }
+}

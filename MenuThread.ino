@@ -83,8 +83,44 @@ void HandleBuffer() {
     return;
   }
 
-  if (menu == MenuSMS_TV_MENU_ID) {
-    MenuSMS_TV_Action(board_buffor[0]);
+  if (menu == Menu_TV_MENU_ID) {
+    Menu_TV_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if (menu == MenuSMS_USAGE_MENU_ID) {
+    MenuSMS_USAGE_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if(menu == MenuSettings_MENU_ID){
+    MenuSettings_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if(menu == MenuPIN_MENU_ID){
+    MenuPIN_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if(menu == MenuInput_MENU_ID){
+    MenuInput_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if(menu == MenuConfirm_MENU_ID){
+    Menu_Confirm_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if(menu == Menu_TXTDelay_MENU_ID){
+    Menu_TXTDelay_Action(board_buffor[0]);
     board_buffi = 0;
     return;
   }

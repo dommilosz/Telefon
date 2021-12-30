@@ -56,8 +56,13 @@ void DrawCurrentMenu() {
       lcd.print(" : ");
       lcd.print(millis() - lastInt);
     } else {
-      lcd.print(LastMenuMsg);
+      if (LastMenuMsg.length() > 0) {
+        lcd.print(LastMenuMsg);
+      } else {
+        lcd.print(op_name);
+      }
     }
+
   }
 
   if (menu == MenuSelect_MENU_ID) {
@@ -80,7 +85,31 @@ void DrawCurrentMenu() {
     MenuSMS_View_Draw();
   }
 
-  if (menu == MenuSMS_TV_MENU_ID) {
-    MenuSMS_TV_Draw();
+  if (menu == Menu_TV_MENU_ID) {
+    Menu_TV_Draw();
+  }
+
+  if (menu == MenuSMS_USAGE_MENU_ID) {
+    MenuSMS_USAGE_Draw();
+  }
+
+  if (menu == MenuSettings_MENU_ID) {
+    MenuSettings_Draw();
+  }
+
+  if (menu == MenuPIN_MENU_ID) {
+    MenuPIN_Draw();
+  }
+
+  if (menu == MenuInput_MENU_ID) {
+    MenuInput_Draw();
+  }
+
+  if (menu == MenuConfirm_MENU_ID) {
+    Menu_Confirm_Draw();
+  }
+
+  if(menu == Menu_TXTDelay_MENU_ID){
+    Menu_TXTDelay_Draw();
   }
 }

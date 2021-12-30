@@ -25,7 +25,7 @@ const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", 
 
 long lastts = 0;
 String b = "";
-long lastOK = 0;
+long lastOK = -150000;
 long lastAT = 0;
 long lastCREG = 0;
 
@@ -53,6 +53,7 @@ LiquidCrystal_I2C_Wire1 lcd(0x27, 20, 4);
 GSMSim gsm(Serial2);
 
 typedef void (* voidFunc)();
+typedef void (* strFunc)(String r);
 
 voidFunc InvokeQueue[16];
 int invokePointer = 0;
@@ -78,11 +79,10 @@ struct SMSStruct2{
 };
 
 const char *MenuStdExit_MENU[1] = {"EXIT"};
-const char *MENUS[] = {"MAIN", "SEL", "STA","TIME","SMS","SMSP","VIEW","STV"};
+const char *MENUS[] = {"MAIN", "SEL", "STA","TIME","SMS","SMSP","VIEW","TV","USAG","SET","PIN","INP","CNF"};
 
-const byte MenuSelect_MENU_LEN = 4;
-const char *MenuSelect_MENU[MenuSelect_MENU_LEN] = {"EXIT", "STATUS", "TIMINGS", "SMS"};
-const byte MenuStatus_MENU_LEN = 1;
+const byte MenuSelect_MENU_LEN = 5;
+const char *MenuSelect_MENU[MenuSelect_MENU_LEN] = {"EXIT", "STATUS", "TIMINGS", "SMS","SETTINGS"};
 
 const byte MenuSelect_MENU_ID = 1;
 const byte MenuStatus_MENU_ID = 2;
@@ -90,6 +90,12 @@ const byte MenuTimings_MENU_ID = 3;
 const byte MenuSMS_MENU_ID = 4;
 const byte MenuSMS_PRE_MENU_ID = 5;
 const byte MenuSMS_View_MENU_ID = 6;
-const byte MenuSMS_TV_MENU_ID = 7;
+const byte Menu_TV_MENU_ID = 7;
+const byte MenuSMS_USAGE_MENU_ID = 8;
+const byte MenuSettings_MENU_ID = 9;
+const byte MenuPIN_MENU_ID = 10;
+const byte MenuInput_MENU_ID = 11;
+const byte MenuConfirm_MENU_ID = 12;
+const byte Menu_TXTDelay_MENU_ID = 13;
 
 String l_status = "ALL";

@@ -2,6 +2,7 @@ bool lastHS = false;
 
 void InitInterrupt() {
   attachInterrupt(digitalPinToInterrupt(PIN_INPUT), Board_Int, RISING);
+  attachInterrupt(digitalPinToInterrupt(PIN_HANG), Hang_Int, CHANGE);
 }
 
 void Board_Int() {
@@ -16,16 +17,13 @@ void Board_Int() {
   }
 }
 
-void FetchHang() {
+void Hang_Int(){
   bool hangState = HangRead();
-
-  if (hangState && !lastHS) {
-    Command("ATH");
+  if(hangState){
+    gsm.hangoff();
+  }else{
+    gsm.answer();
   }
-  if (!hangState && lastHS) {
-    Command("ATA");
-  }
-  lastHS = hangState;
 }
 
 void FetchBoard() {

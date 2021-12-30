@@ -21,7 +21,7 @@ void loop() {
   while (Serial.available()) {
     char c = Serial.read();
     if (c == '\r') {
-      Command(buff);
+      Serial2.print(buff+"\r");
       buff = "";
     }
     buff += c;
@@ -42,7 +42,6 @@ void loop() {
   }
 
   CheckConnection();
-  FetchHang();
   ExecuteQueue();
 }
 
