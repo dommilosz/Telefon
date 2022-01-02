@@ -141,12 +141,10 @@ void UnlockPUK(String newpin) {
   newpin.toCharArray(c, newpin.length()+1);
 
   if (gsm.enterPukCode(puk, c)) {
-    lcd.print("SUCCESS");
+    ShowTXTD("SUCCESS",2);
   } else {
-    lcd.print("ERROR");
+    ShowTXTD("ERROR",2);
   }
-  delay(1000);
-  menu = MenuPIN_MENU_ID;
 }
 
 void changePin(String pin) {

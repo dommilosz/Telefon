@@ -1,6 +1,6 @@
 void setup() {
   Serial.begin(115200);
-  Serial2.begin(115200);
+  Serial2.begin(57600);
 
   Serial2.print("AT\r");
   //Serial2.readStringUntil("OK");

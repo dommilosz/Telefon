@@ -260,13 +260,13 @@ void MenuSMS_View_Action(byte item) {
 
   if (item == 5) {
     gsm.read(sms.id, true);
-    InvokeOnWorker(ReadSMSPage);
+    InvokeOnWorker(ReadSMS);
   }
 
   if (item == 6) {
     gsm.deleteOne(sms.id);
     menu = MenuSMS_MENU_ID;
-    InvokeOnWorker(ReadSMSPage);
+    InvokeOnWorker(ReadSMS);
   }
 }
 

@@ -125,6 +125,24 @@ void HandleBuffer() {
     return;
   }
 
+  if(menu == MenuPhoneBook_Pre_MENU_ID){
+    MenuPhoneBook_Pre_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
+  if(menu == MenuPhoneBook_MENU_ID){
+    MenuPhoneBook_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+  
+  if(menu == MenuPhoneBook_View_MENU_ID){
+    MenuPhoneBook_View_Action(board_buffor[0]);
+    board_buffi = 0;
+    return;
+  }
+
   if(menu == 0){
     InvokeOnWorker(CallBuffer);
     return;

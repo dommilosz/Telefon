@@ -67,10 +67,14 @@ void CheckConnection() {
 }
 
 SMSStruct smses[128];
+PhoneBookEntry phoneBook[128];
+
 SMSStruct *vsmses[128];
 SMSStruct *current_sms;
+PhoneBookEntry *current_pe;
 int sms_count = 0;
 int sms_pages_count = 0;
+int pe_pages_count = 0;
 
 int MemUsage[] = {0, 0};
 
@@ -80,6 +84,10 @@ void FetchUsage() {
 
 void FetchPIN() {
   pin_status = gsm.pinStatus();
+  FetchPE();
+}
+
+void FetchPE() {
   int pe = gsm.getPinStatus();
   if (pe == 0) {
     pin_enabled = false;
@@ -89,5 +97,6 @@ void FetchPIN() {
   } else {
     Serial.println("E57");
     Serial.println(pe);
+    FetchPE();
   }
 }

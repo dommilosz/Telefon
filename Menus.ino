@@ -25,7 +25,7 @@ void MenuSelect_Action(byte item) {
     menu = MenuTimings_MENU_ID;
   }
   if (item == 3) {
-    InvokeOnWorker(ReadSMSPage);
+    InvokeOnWorker(ReadSMS);
     menu = MenuSMS_PRE_MENU_ID;
     menuItem = 0;
     sms_menu_item = 0;
@@ -33,6 +33,9 @@ void MenuSelect_Action(byte item) {
   }
   if (item == 4) {
     menu = MenuSettings_MENU_ID;
+  }
+  if (item == 5) {
+    menu = MenuPhoneBook_Pre_MENU_ID;
   }
 }
 

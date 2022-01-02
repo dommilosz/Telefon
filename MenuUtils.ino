@@ -112,4 +112,16 @@ void DrawCurrentMenu() {
   if(menu == Menu_TXTDelay_MENU_ID){
     Menu_TXTDelay_Draw();
   }
+
+  if(menu == MenuPhoneBook_Pre_MENU_ID){
+    MenuPhoneBook_Pre_Draw();
+  }
+
+  if(menu == MenuPhoneBook_MENU_ID){
+    MenuPhoneBook_Draw();
+  }
+
+  if(menu == MenuPhoneBook_View_MENU_ID){
+    MenuPhoneBook_View_Draw();
+  }
 }

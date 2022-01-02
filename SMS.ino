@@ -51,7 +51,7 @@ SMSStruct GetSms(int index, bool read = false) {
   return sms;
 }
 
-void ReadSMSPage() {
+void ReadSMS() {
   sms_count = 0;
   gsm.setTextMode(true);
 

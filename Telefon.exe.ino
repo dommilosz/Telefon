@@ -79,10 +79,10 @@ struct SMSStruct2{
 };
 
 const char *MenuStdExit_MENU[1] = {"EXIT"};
-const char *MENUS[] = {"MAIN", "SEL", "STA","TIME","SMS","SMSP","VIEW","TV","USAG","SET","PIN","INP","CNF"};
+const char *MENUS[] = {"MAIN", "SEL", "STA","TIME","SMS","SMSP","VIEW","TV","USAG","SET","PIN","INP","CNF","TXD","PHP","PHB"};
 
-const byte MenuSelect_MENU_LEN = 5;
-const char *MenuSelect_MENU[MenuSelect_MENU_LEN] = {"EXIT", "STATUS", "TIMINGS", "SMS","SETTINGS"};
+const byte MenuSelect_MENU_LEN = 6;
+const char *MenuSelect_MENU[MenuSelect_MENU_LEN] = {"EXIT", "STATUS", "TIMINGS", "SMS","SETTINGS","PHONEBOOK"};
 
 const byte MenuSelect_MENU_ID = 1;
 const byte MenuStatus_MENU_ID = 2;
@@ -97,5 +97,8 @@ const byte MenuPIN_MENU_ID = 10;
 const byte MenuInput_MENU_ID = 11;
 const byte MenuConfirm_MENU_ID = 12;
 const byte Menu_TXTDelay_MENU_ID = 13;
+const byte MenuPhoneBook_Pre_MENU_ID = 14;
+const byte MenuPhoneBook_MENU_ID = 15;
+const byte MenuPhoneBook_View_MENU_ID = 16;
 
 String l_status = "ALL";
