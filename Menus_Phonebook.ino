@@ -4,7 +4,7 @@
 
 void MenuPhoneBook_Pre_Draw() {
   lcd.setCursor(0, 1);
-  if (menuItem >= 4) {
+  if (menuItem >= 3) {
     menuItem = 0;
   }
   if (menuItem == 0) {
