@@ -132,6 +132,8 @@ void setPin(String input) {
       ShowTXTD("ERROR", 2);
     }
   }
+  lcd.setCursor(0, 1);
+  lcd.print("LOADING...          ");
   FetchPIN();
 }
 

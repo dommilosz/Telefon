@@ -10,6 +10,9 @@
 
 #define PIN_RGB   4
 
+#define PIN_BTN   6
+#define PIN_BTN_LED 5
+
 #define STATUS_OK 0
 #define STATUS_NOAT 1
 #define STATUS_ERROR 2

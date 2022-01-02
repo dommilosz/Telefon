@@ -68,7 +68,7 @@ void MenuInput_Draw() {
   lcd.print(_placeholder);
   lcd.setCursor(0, 1);
   lcd.print(IO_str);
-  if((millis() - last_input)>5000){
+  if((millis() - last_input)>15000){
     menu = input_prev_menu;
     in_func(IO_str);
   }

@@ -8,6 +8,8 @@ void setup() {
   pixels.begin();
   SetLEDColor(0, 255, 0);
 
+  pinMode(PIN_BTN_LED,OUTPUT);
+
   lcd.init();                      // initialize the lcd
   lcd.backlight();
 
@@ -50,4 +52,27 @@ void CallBuffer() {
   VoiceCall(&s);
   board_buffor[0] = 255;
   board_buffi = 0;
+}
+
+void InitInterrupt() {
+  attachInterrupt(digitalPinToInterrupt(PIN_INPUT), Board_Int, RISING);
+  attachInterrupt(digitalPinToInterrupt(PIN_HANG), Hang_Int, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(PIN_BTN), Button_Int, CHANGE);
+}
+
+long pressed = 0;
+void Button_Int(){
+  bool state = digitalRead(PIN_BTN);
+  //Serial.print("S:");
+  //Serial.println(state);
+  if(state){
+    pressed = millis();
+  }else{
+    long diff = millis()-pressed;
+    if(diff > 600){
+      ButtonAction(true);
+    }else if(diff > 100){
+      ButtonAction(false);
+    }
+  }
 }

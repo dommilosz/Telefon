@@ -1,10 +1,5 @@
 bool lastHS = false;
 
-void InitInterrupt() {
-  attachInterrupt(digitalPinToInterrupt(PIN_INPUT), Board_Int, RISING);
-  attachInterrupt(digitalPinToInterrupt(PIN_HANG), Hang_Int, CHANGE);
-}
-
 void Board_Int() {
   long current = millis();
   if (current - lastInt > 5000) {
