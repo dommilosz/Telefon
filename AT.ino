@@ -5,6 +5,7 @@ bool TestAT() {
 GSMStatus status_cache;
 
 void VoiceCall(String * number) {
+  Serial.println(*number);
   bool resp = gsm.call(number);
   if (!resp) {
     LastMenuMsg = "ERR: " + resp;
@@ -21,7 +22,6 @@ void CheckConnection() {
   long diffAT = current - lastAT;
   long diffCREG = current - lastCREG;
 
-  //Serial.println(lastOK);
   if (diffOK > 15000) {
     AT_STATUS = STATUS_NOAT;
     if (diffAT > 500) {
@@ -40,7 +40,7 @@ void CheckConnection() {
     }
   }
 
-  if (diffAT > 500 && (diffCREG > 30000 || (diffCREG > 5000 && !status_cache.service))) {
+  if (AT_STATUS != STATUS_NOAT && diffAT > 500 && (diffCREG > 30000 || (diffCREG > 5000 && (!status_cache.service||pe_error)))) {
     //+CIND: 5,0,0,0,0,0,1
     //+CIND:("battchg",(0-5)), ("signal",(0-5)), ("service",(0,1)), ("message",(0,1)),("call",(0,1)), ("roam",(0,1)), ("smsfull",(0,1))
     status_cache = gsm.getStatus();
@@ -89,6 +89,7 @@ void FetchPIN() {
 
 void FetchPE() {
   int pe = gsm.getPinStatus();
+  pe_error= false;
   if (pe == 0) {
     pin_enabled = false;
   }
@@ -97,6 +98,6 @@ void FetchPE() {
   } else {
     Serial.println("E57");
     Serial.println(pe);
-    FetchPE();
+    pe_error = true;
   }
 }

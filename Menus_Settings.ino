@@ -53,7 +53,9 @@ void MenuPIN_Draw() {
   if (menuItem == 1) {
     lcd.print(menuItem);
     lcd.print(": ");
-    if (pin_status == 1) {
+    if (pe_error) {
+      lcd.print("PIN: Fetching");
+    } else if (pin_status == 1) {
       lcd.print("Enter PIN");
     } else if (pin_status == 2) {
       lcd.print("Enter PUK");
@@ -79,15 +81,16 @@ void MenuPIN_Action(byte item) {
     menu = MenuSettings_MENU_ID;
   }
   if (item == 1) {
-    if (pin_status == 2){
-      ShowInput(setPin,"Enter PUK:");
-    }else{
-      ShowInput(setPin,"Enter PIN:");
+    if (pe_error) {
+      lcd.print("PIN: Fetching");
+    } else if (pin_status == 2) {
+      ShowInput(setPin, "Enter PUK:");
+    } else {
+      ShowInput(setPin, "Enter PIN:");
     }
-    
   }
   if (item == 2) {
-    ShowInput(changePin,"Enter OLD PIN:");
+    ShowInput(changePin, "Enter OLD PIN:");
   }
 }
 
@@ -101,7 +104,7 @@ void setPin(String input) {
   }
   char c[8];
   c[input.length()] = 0;
-  input.toCharArray(c, input.length()+1);
+  input.toCharArray(c, input.length() + 1);
 
   Serial.println(c);
   Serial.println(input);
@@ -115,7 +118,7 @@ void setPin(String input) {
   }
   if (pin_status == 2) {
     puk[input.length()] = 0;
-    input.toCharArray(puk, input.length()+1);
+    input.toCharArray(puk, input.length() + 1);
     ShowInput(UnlockPUK, "Enter new pin:");
     return;
   }
@@ -140,18 +143,18 @@ void setPin(String input) {
 void UnlockPUK(String newpin) {
   char c[8];
   c[newpin.length()] = 0;
-  newpin.toCharArray(c, newpin.length()+1);
+  newpin.toCharArray(c, newpin.length() + 1);
 
   if (gsm.enterPukCode(puk, c)) {
-    ShowTXTD("SUCCESS",2);
+    ShowTXTD("SUCCESS", 2);
   } else {
-    ShowTXTD("ERROR",2);
+    ShowTXTD("ERROR", 2);
   }
 }
 
 void changePin(String pin) {
   puk[pin.length()] = 0;
-  pin.toCharArray(puk, pin.length()+1);
+  pin.toCharArray(puk, pin.length() + 1);
   ShowInput(changePin2, "Enter new pin:");
   return;
 }
@@ -159,7 +162,7 @@ void changePin(String pin) {
 void changePin2(String newpin) {
   char c[8];
   c[newpin.length()] = 0;
-  newpin.toCharArray(c, newpin.length()+1);
+  newpin.toCharArray(c, newpin.length() + 1);
   if (gsm.changePinCode(puk, c)) {
     lcd.print("SUCCESS");
   } else {

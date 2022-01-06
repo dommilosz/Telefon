@@ -54,106 +54,45 @@ void loop1() {
 void HandleBuffer() {
   if (menu == 0 && board_buffor[0] == 0 && board_buffi == 1) {
     menu = 1;
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuSelect_MENU_ID) {
+  } else if (menu == MenuSelect_MENU_ID) {
     MenuSelect_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-  if (menu == MenuStatus_MENU_ID) {
+  } else if (menu == MenuStatus_MENU_ID) {
     MenuStatus_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-  if (menu == MenuTimings_MENU_ID) {
+  } else if (menu == MenuTimings_MENU_ID) {
     MenuTimings_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-  if (menu == MenuSMS_MENU_ID) {
+  } else if (menu == MenuSMS_MENU_ID) {
     MenuSMS_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-  if (menu == MenuSMS_PRE_MENU_ID) {
+  } else if (menu == MenuSMS_PRE_MENU_ID) {
     MenuSMS_PRE_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuSMS_View_MENU_ID) {
+  } else if (menu == MenuSMS_View_MENU_ID) {
     MenuSMS_View_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == Menu_TV_MENU_ID) {
+  } else if (menu == Menu_TV_MENU_ID) {
     Menu_TV_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuSMS_USAGE_MENU_ID) {
+  } else if (menu == MenuSMS_USAGE_MENU_ID) {
     MenuSMS_USAGE_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuSettings_MENU_ID) {
+  } else if (menu == MenuSettings_MENU_ID) {
     MenuSettings_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuPIN_MENU_ID) {
+  } else if (menu == MenuPIN_MENU_ID) {
     MenuPIN_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuInput_MENU_ID) {
+  } else if (menu == MenuInput_MENU_ID) {
     MenuInput_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuConfirm_MENU_ID) {
+  } else if (menu == MenuConfirm_MENU_ID) {
     Menu_Confirm_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == Menu_TXTDelay_MENU_ID) {
+  } else if (menu == Menu_TXTDelay_MENU_ID) {
     Menu_TXTDelay_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuPhoneBook_Pre_MENU_ID) {
+  } else if (menu == MenuPhoneBook_Pre_MENU_ID) {
     MenuPhoneBook_Pre_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuPhoneBook_MENU_ID) {
+  } else if (menu == MenuPhoneBook_MENU_ID) {
     MenuPhoneBook_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
-  }
-
-  if (menu == MenuPhoneBook_View_MENU_ID) {
+  } else if (menu == MenuPhoneBook_View_MENU_ID) {
     MenuPhoneBook_View_Action(board_buffor[0]);
-    board_buffi = 0;
-    return;
+  } else if (menu == 0) {
+    CallBuffer();
   }
 
-  if (menu == 0) {
-    InvokeOnWorker(CallBuffer);
-    return;
-  }
+
+  board_buffor[0] = 255;
+  board_buffi = 0;
 }
 
 void loop_5ms() {
@@ -179,15 +118,20 @@ void loop_1s() {
 void ButtonAction(bool isLong) {
   if (menu == MenuInput_MENU_ID) {
     if (isLong) {
-      if(IO_str.length()<1){
+      if (IO_str.length() < 1) {
         menu = input_prev_menu;;
-      }else{
+      } else {
         IO_str = IO_str.substring(0, IO_str.length() - 1);
       }
     } else {
       menu = input_prev_menu;
       in_func(IO_str);
     }
+  }
 
+  if (menu == 0) {
+    if (board_buffi > 0) {
+      board_buffi--;
+    }
   }
 }

@@ -12,11 +12,11 @@ void Board_Int() {
   }
 }
 
-void Hang_Int(){
+void Hang_Int() {
   bool hangState = HangRead();
-  if(hangState){
+  if (hangState) {
     gsm.hangoff();
-  }else{
+  } else {
     gsm.answer();
   }
 }
@@ -25,21 +25,20 @@ void FetchBoard() {
   long current = millis();
 
   if (board_count > 0 && current - lastInt > 500) {
-    if (board_count == 10)board_count = 0;
-    Serial.println(board_count);
-    if (board_buffi < BOARD_MAX) {
-      board_buffor[board_buffi] = board_count;
-      board_buffi++;
-    }
+    BufferPush(board_count);
     board_count = 0;
-
   }
   if ((millis() - lastInt > 5000 || menu != 0 || board_buffor[0] == 0) && board_buffi) {
     PrintBuffer(board_buffor, board_buffi);
     HandleBuffer();
   }
+}
 
-  if (AT_STATUS == STATUS_OK && board_count > 0) {
-    AT_STATUS = STATUS_BOARD;
+void BufferPush(byte b) {
+  if (b == 10)b = 0;
+  Serial.println(b);
+  if (board_buffi < BOARD_MAX) {
+    board_buffor[board_buffi] = b;
+    board_buffi++;
   }
 }

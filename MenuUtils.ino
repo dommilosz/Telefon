@@ -16,11 +16,6 @@ void UpdateLED() {
     return;
   }
 
-  if (AT_STATUS == STATUS_BOARD) {
-    SetLEDColor(0, 255, 255);
-    return;
-  }
-
   if (AT_STATUS == STATUS_CALL) {
     if ((loopI % 300) > 150) {
       SetLEDColor(255, 0, 0);
@@ -54,7 +49,9 @@ void DrawCurrentMenu() {
     if (board_buffi) {
       lcd.print(BufferToString(board_buffor, board_buffi));
       lcd.print(" : ");
-      lcd.print(millis() - lastInt);
+      if (board_buffi >= 3) {
+        lcd.print(millis() - lastInt);
+      }
     } else {
       if (LastMenuMsg.length() > 0) {
         lcd.print(LastMenuMsg);
@@ -109,19 +106,19 @@ void DrawCurrentMenu() {
     Menu_Confirm_Draw();
   }
 
-  if(menu == Menu_TXTDelay_MENU_ID){
+  if (menu == Menu_TXTDelay_MENU_ID) {
     Menu_TXTDelay_Draw();
   }
 
-  if(menu == MenuPhoneBook_Pre_MENU_ID){
+  if (menu == MenuPhoneBook_Pre_MENU_ID) {
     MenuPhoneBook_Pre_Draw();
   }
 
-  if(menu == MenuPhoneBook_MENU_ID){
+  if (menu == MenuPhoneBook_MENU_ID) {
     MenuPhoneBook_Draw();
   }
 
-  if(menu == MenuPhoneBook_View_MENU_ID){
+  if (menu == MenuPhoneBook_View_MENU_ID) {
     MenuPhoneBook_View_Draw();
   }
 }

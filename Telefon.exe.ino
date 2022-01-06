@@ -18,11 +18,10 @@
 #define STATUS_ERROR 2
 #define STATUS_OTHER 3
 #define STATUS_UNREG 4
-#define STATUS_BOARD 5
-#define STATUS_CALL 6
+#define STATUS_CALL 5
 
 
-const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "BOARD", "CALL"};
+const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "CALL"};
 const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", "roam", "smsfull"};
 
 
@@ -48,6 +47,7 @@ long lastInt = 0;
 byte sms_page = 0;
 int sms_menu_item = 0;
 int selected_sms = -1;
+bool pe_error = false;
 
 String LastMenuMsg = "";
 

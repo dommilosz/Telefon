@@ -1,0 +1,81 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+<style>
+    .pixel {
+        background-color: black;
+        width: 3px;
+        height: 3px;
+        display: inline;
+        margin-right: 1px;
+    }
+    .p_group{
+        display: flex;
+        margin-bottom: 1px;
+    }
+    .p_column {
+        margin-right: -2px;
+        display: inline-block;
+        flex-direction: column;
+    }
+    .button{
+        width:30px;
+        height:30px;
+        display:inline;
+        text-align: center;
+    }
+    .hidden{
+        visibility:hidden;
+    }
+    .button.x2{
+        width:64px;
+    }
+    .button.x3{
+        width:98px;
+    }
+</style>
+
+<div style="position:absolute">
+    <button class="button x3" id="btn_connect" onclick="btn_connect()">Connect</button>
+    <br>
+    <br>
+    <br>
+    <button class="button" onclick="button(1)">1</button>
+    <button class="button" onclick="button(2)">2</button>
+    <button class="button" onclick="button(3)">3</button><br>
+    <button class="button" onclick="button(4)">4</button>
+    <button class="button" onclick="button(5)">5</button>
+    <button class="button" onclick="button(6)">6</button><br>
+    <button class="button" onclick="button(7)">7</button>
+    <button class="button" onclick="button(8)">8</button>
+    <button class="button" onclick="button(9)">9</button><br>
+    <button class="button" onclick="button(0)">0</button>
+
+
+    <button class="button" onclick="buttonConfirm(0)">OK</button>
+    <button class="button" onclick="buttonConfirm(1)"><-</button>
+
+    <br><br>
+
+    <button class="button x3" onclick="hangButton(0)">Hang</button><br>
+    <button class="button x3" onclick="hangButton(1)">Answer</button>
+</div>
+<div style="position:absolute;left:25%;">
+    <img src="lcd.png" style="position:absolute;z-index: -1"/>
+    <div style="width: 355px;height: 69px;top: 102px;left: 80px;position: absolute;">
+        <div id="lcd"></div>
+    </div>
+</div>
+
+
+<script src="char-lcd.js"></script>
+<script src="serial.js"></script>
+<script src="script.js"></script>
+
+</body>
+
+</html>

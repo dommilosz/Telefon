@@ -8,7 +8,7 @@ void setup() {
   pixels.begin();
   SetLEDColor(0, 255, 0);
 
-  pinMode(PIN_BTN_LED,OUTPUT);
+  pinMode(PIN_BTN_LED, OUTPUT);
 
   lcd.init();                      // initialize the lcd
   lcd.backlight();
@@ -23,17 +23,39 @@ void loop() {
   while (Serial.available()) {
     char c = Serial.read();
     if (c == '\r') {
-      Serial2.print(buff+"\r");
+      Serial2.print(buff + "\r");
       buff = "";
     }
     buff += c;
     if (c == '#') {
-      if (Serial.read() == 'm') {
-        board_buffi = 1;
+      char c = Serial.read();
+      if (c == 'd') {
         String s = "";
         s += (char)Serial.read();
-        board_buffor[0] = s.toInt();
-        HandleBuffer();
+        BufferPush(s.toInt());
+        lastInt = millis();
+      }
+      if (c == 'l') {
+        if (Serial.read() == '1') {
+          lcd.setLogger(true, &Serial);
+        } else {
+          lcd.setLogger(false, &Serial);
+        }
+
+      }
+      if (c == 'b') {
+        if (Serial.read() == '1') {
+          ButtonAction(true);
+        } else {
+          ButtonAction(false);
+        }
+      }
+      if (c == 'h') {
+        if (Serial.read() == '1') {
+          gsm.answer();
+        } else {
+          gsm.hangoff();
+        }
       }
       buff = "";
     }
@@ -49,9 +71,9 @@ void loop() {
 
 void CallBuffer() {
   String s = BufferToString(board_buffor, board_buffi);
+  Serial.println(s);
+  if (s.length() < 3)return;
   VoiceCall(&s);
-  board_buffor[0] = 255;
-  board_buffi = 0;
 }
 
 void InitInterrupt() {
@@ -61,17 +83,17 @@ void InitInterrupt() {
 }
 
 long pressed = 0;
-void Button_Int(){
+void Button_Int() {
   bool state = digitalRead(PIN_BTN);
   //Serial.print("S:");
   //Serial.println(state);
-  if(state){
+  if (state) {
     pressed = millis();
-  }else{
-    long diff = millis()-pressed;
-    if(diff > 600){
+  } else {
+    long diff = millis() - pressed;
+    if (diff > 600) {
       ButtonAction(true);
-    }else if(diff > 100){
+    } else if (diff > 100) {
       ButtonAction(false);
     }
   }
