@@ -1,103 +1,85 @@
+#define Menu_Show(id) {[]() {menus[id].Show();}}
+
+void RegisterMenus() {
+  MenuPanel *panel = RegisterMenu(MenuSelect_MENU_ID, "SEL", true, false);
+  panel->AddExitField();
+  panel->AddField("STATUS", Menu_Show(MenuStatus_MENU_ID));
+  panel->AddField("TIMINGS", Menu_Show(MenuTimings_MENU_ID));
+  panel->AddField("SMS", ShowMenuAndFetchSMS);
+  panel->AddField("SETTINGS", Menu_Show(MenuSettings_MENU_ID));
+  panel->AddField("PHONEBOOK", Menu_Show(MenuPhoneBook_Pre_MENU_ID));
+
+  panel = RegisterMenu(MenuStatus_MENU_ID, "STA", false, false);
+  panel->AddExitField();
+  panel->AddFields(7);
+  panel->SetGenerateCb(GenerateFields_Status);
+
+  panel = RegisterMenu(MenuTimings_MENU_ID, "TIME", false, false);
+  panel->AddExitField();
+  panel->AddFields(3);
+  panel->SetGenerateCb(GenerateFields_Timings);
+
+  panel = RegisterMenu(MenuSMS_MENU_ID, "SMS", false, true);
+  panel->AddExitField();
+  panel->AddFields(9);
+  panel->UpdateField(8, "Previous Page", SMS_PrevPage, true);
+  panel->UpdateField(9, "Next Page", SMS_NextPage, true);
+  panel->SetGenerateCb(GenerateFields_SMS);
+
+  panel = RegisterMenu(MenuSMS_PRE_MENU_ID, "SMSP", true, false);
+  panel->AddExitField();
+  panel->AddFields(6);
+  panel->SetGenerateCb(GenerateFields_SMS_PRE);
+
+  panel = RegisterMenu(MenuSMS_USAGE_MENU_ID, "USAG", false, false);
+  panel->AddExitField();
+  panel->AddFields(1);
+  panel->SetGenerateCb(GenerateFields_SMS_USAGE);
+
+  panel = RegisterMenu(MenuSMS_View_MENU_ID, "VIEW", true, false);
+  panel->AddExitField();
+  panel->AddFields(7);
+  panel->UpdateField(5, "Text View", SMSViewAction_TextView, true);
+  panel->UpdateField(6, "Mark as READ", SMSViewAction_Mark_Read, true);
+  panel->UpdateField(7, "Delete", SMSViewAction_Delete, true);
+  panel->SetGenerateCb(GenerateFields_SMS_View);
+
+  panel = RegisterMenu(MenuSettings_MENU_ID, "SET", true, false);
+  panel->AddExitField();
+  panel->AddField("PIN", Menu_Show(MenuPIN_MENU_ID));
+
+  panel = RegisterMenu(MenuPIN_MENU_ID, "PIN", true, false);
+  panel->AddExitField();
+  panel->AddFields(1);
+  panel->AddField("Change PIN", PIN_Change_PIN);
+  panel->SetGenerateCb(GenerateFields_PIN);
+
+  panel = RegisterMenu(MenuPhoneBook_Pre_MENU_ID, "PHP", true, false);
+  panel->AddExitField();
+  panel->AddField("NEW [WIP]", NULL);
+  panel->AddField("PHONEBOOK", PhoneBook_Launch);
+
+  panel = RegisterMenu(MenuPhoneBook_MENU_ID, "PHB", true, true);
+  panel->AddExitField();
+  panel->AddFields(9);
+  panel->UpdateField(8, "Previous Page", PE_PrevPage, true);
+  panel->UpdateField(9, "Next Page", PE_NextPage, true);
+  panel->SetGenerateCb(GenerateFields_PhoneBook);
+
+  panel = RegisterMenu(MenuPhoneBook_View_MENU_ID, "VIEW", true, false);
+  panel->AddExitField();
+  panel->AddFields(7);
+  panel->UpdateField(5, "Call", PEViewAction_Call, true);
+  panel->UpdateField(6, "Edit", PEViewAction_Edit, true);
+  panel->UpdateField(7, "Delete", PEViewAction_Delete, true);
+  panel->SetGenerateCb(GenerateFields_PE_View);
+
+  registerInputMenus();
 
 
-//
-//MenuSelect
-//
-
-void MenuSelect_Draw() {
-  lcd.setCursor(0, 1);
-  if (menuItem >= MenuSelect_MENU_LEN) {
-    menuItem = 0;
-  }
-  lcd.print(menuItem);
-  lcd.print(": ");
-  lcd.print(MenuSelect_MENU[menuItem]);
+  //const char *MENUS[] = {"", "", "", "", "", "", "", "TV", "", "", "", "INP", "CNF", "TXD", "", ""};
 }
 
-void MenuSelect_Action(byte item) {
-  if (item == 0) {
-    menu = 0;
-  }
-  if (item == 1) {
-    menu = MenuStatus_MENU_ID;
-  }
-  if (item == 2) {
-    menu = MenuTimings_MENU_ID;
-  }
-  if (item == 3) {
-    InvokeOnWorker(ReadSMS);
-    menu = MenuSMS_PRE_MENU_ID;
-    menuItem = 0;
-    sms_menu_item = 0;
-    loopI500 = 0;
-  }
-  if (item == 4) {
-    menu = MenuSettings_MENU_ID;
-  }
-  if (item == 5) {
-    menu = MenuPhoneBook_Pre_MENU_ID;
-  }
-}
-
-//
-//MenuStatus
-//
-
-void MenuStatus_Draw() {
-  lcd.setCursor(0, 1);
-  if (menuItem >= 8) {
-    menuItem = 0;
-  }
-  if (menuItem == 0) {
-    lcd.print(menuItem);
-    lcd.print(": ");
-    lcd.print(MenuStdExit_MENU[menuItem]);
-  } else {
-    lcd.print(AT_STATUSES[menuItem - 1]);
-    lcd.print(": ");
-    lcd.print((*((byte*)(&status_cache) + (menuItem - 1))));
-  }
-}
-
-void MenuStatus_Action(byte item) {
-  if (item == 0) {
-    menu = MenuSelect_MENU_ID;
-  }
-}
-
-//
-//MenuTimings
-//
-
-void MenuTimings_Draw() {
-  lcd.setCursor(0, 1);
-  if (menuItem >= 4) {
-    menuItem = 0;
-  }
-  if (menuItem == 0) {
-    lcd.print(menuItem);
-    lcd.print(": ");
-    lcd.print(MenuStdExit_MENU[menuItem]);
-  }
-  if (menuItem == 1) {
-    lcd.print("Last 5:");
-    lcd.print(maxTimings[0]);
-    lcd.print("ms");
-  }
-  if (menuItem == 2) {
-    lcd.print("Last 500:");
-    lcd.print(maxTimings[1]);
-    lcd.print("ms");
-  }
-  if (menuItem == 3) {
-    lcd.print("Last 1000:");
-    lcd.print(maxTimings[2]);
-    lcd.print("ms");
-  }
-}
-
-void MenuTimings_Action(byte item) {
-  if (item == 0) {
-    menu = MenuSelect_MENU_ID;
-  }
+void Menu_Back() {
+  menus[menu].Back();
 }

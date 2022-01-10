@@ -60,65 +60,9 @@ void DrawCurrentMenu() {
       }
     }
 
+  }else{
+    menus[menu].Draw();
   }
 
-  if (menu == MenuSelect_MENU_ID) {
-    MenuSelect_Draw();
-  }
-  if (menu == MenuStatus_MENU_ID) {
-    MenuStatus_Draw();
-  }
-  if (menu == MenuTimings_MENU_ID) {
-    MenuTimings_Draw();
-  }
-  if (menu == MenuSMS_MENU_ID) {
-    MenuSMS_Draw();
-  }
-  if (menu == MenuSMS_PRE_MENU_ID) {
-    MenuSMS_PRE_Draw();
-  }
-
-  if (menu == MenuSMS_View_MENU_ID) {
-    MenuSMS_View_Draw();
-  }
-
-  if (menu == Menu_TV_MENU_ID) {
-    Menu_TV_Draw();
-  }
-
-  if (menu == MenuSMS_USAGE_MENU_ID) {
-    MenuSMS_USAGE_Draw();
-  }
-
-  if (menu == MenuSettings_MENU_ID) {
-    MenuSettings_Draw();
-  }
-
-  if (menu == MenuPIN_MENU_ID) {
-    MenuPIN_Draw();
-  }
-
-  if (menu == MenuInput_MENU_ID) {
-    MenuInput_Draw();
-  }
-
-  if (menu == MenuConfirm_MENU_ID) {
-    Menu_Confirm_Draw();
-  }
-
-  if (menu == Menu_TXTDelay_MENU_ID) {
-    Menu_TXTDelay_Draw();
-  }
-
-  if (menu == MenuPhoneBook_Pre_MENU_ID) {
-    MenuPhoneBook_Pre_Draw();
-  }
-
-  if (menu == MenuPhoneBook_MENU_ID) {
-    MenuPhoneBook_Draw();
-  }
-
-  if (menu == MenuPhoneBook_View_MENU_ID) {
-    MenuPhoneBook_View_Draw();
-  }
+  
 }

@@ -11,6 +11,7 @@ void setup1() {
   last1000 = millis();
   InitInterrupt();
   board_buffi = 0;
+  RegisterMenus();
 }
 
 
@@ -54,38 +55,8 @@ void loop1() {
 void HandleBuffer() {
   if (menu == 0 && board_buffor[0] == 0 && board_buffi == 1) {
     menu = 1;
-  } else if (menu == MenuSelect_MENU_ID) {
-    MenuSelect_Action(board_buffor[0]);
-  } else if (menu == MenuStatus_MENU_ID) {
-    MenuStatus_Action(board_buffor[0]);
-  } else if (menu == MenuTimings_MENU_ID) {
-    MenuTimings_Action(board_buffor[0]);
-  } else if (menu == MenuSMS_MENU_ID) {
-    MenuSMS_Action(board_buffor[0]);
-  } else if (menu == MenuSMS_PRE_MENU_ID) {
-    MenuSMS_PRE_Action(board_buffor[0]);
-  } else if (menu == MenuSMS_View_MENU_ID) {
-    MenuSMS_View_Action(board_buffor[0]);
-  } else if (menu == Menu_TV_MENU_ID) {
-    Menu_TV_Action(board_buffor[0]);
-  } else if (menu == MenuSMS_USAGE_MENU_ID) {
-    MenuSMS_USAGE_Action(board_buffor[0]);
-  } else if (menu == MenuSettings_MENU_ID) {
-    MenuSettings_Action(board_buffor[0]);
-  } else if (menu == MenuPIN_MENU_ID) {
-    MenuPIN_Action(board_buffor[0]);
-  } else if (menu == MenuInput_MENU_ID) {
-    MenuInput_Action(board_buffor[0]);
-  } else if (menu == MenuConfirm_MENU_ID) {
-    Menu_Confirm_Action(board_buffor[0]);
-  } else if (menu == Menu_TXTDelay_MENU_ID) {
-    Menu_TXTDelay_Action(board_buffor[0]);
-  } else if (menu == MenuPhoneBook_Pre_MENU_ID) {
-    MenuPhoneBook_Pre_Action(board_buffor[0]);
-  } else if (menu == MenuPhoneBook_MENU_ID) {
-    MenuPhoneBook_Action(board_buffor[0]);
-  } else if (menu == MenuPhoneBook_View_MENU_ID) {
-    MenuPhoneBook_View_Action(board_buffor[0]);
+  } else if (menu != 0) {
+    menus[menu].Action(board_buffor[0]);
   } else if (menu == 0) {
     CallBuffer();
   }
