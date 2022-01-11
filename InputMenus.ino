@@ -6,6 +6,7 @@ int delayLeft = 0;
 String _placeholder = "";
 
 void ShowTextView(String txt) {
+  IO_str = txt;
   menus[Menu_TV_MENU_ID].Show();
 }
 
@@ -37,11 +38,14 @@ void ShowTXTD(String txt, int delay) {
 
 void Menu_TV_Draw(int draw_index) {
   String data = IO_str;
-  if (IO_str.length() > 16) {
+  if (data.length() > 16) {
     data = IO_str.substring(loopI500);
     if (data.length() < 14) {
       loopI500 = 0;
     }
+  }
+  if(data.length()>16){
+    data = data.substring(0,17);
   }
   menus[menu].UpdateField_Txt(0,data);
 }

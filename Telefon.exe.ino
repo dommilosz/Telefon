@@ -123,6 +123,7 @@ class MenuPanel {
     MenuField fields_sec[10];
     byte fields_count;
     byte draw_index;
+    byte action_index;
     byte draw_index_div;
     bool double_time = false;
     bool append_field_index = true;
@@ -131,17 +132,18 @@ class MenuPanel {
     intFunc actionCb = NULL;
 
     void Draw() {
+      lcd.setCursor(0, 1);
       if (draw_override != NULL) {
         draw_override();
         return;
       }
 
-      lcd.setCursor(0, 1);
       if (invokePointer > 0) {
         lcd.print("Loading...");
         Reset();
         return;
       }
+      
       if (menu != id)return;
       if (double_time) {
         draw_index = draw_index_div / 2;
@@ -166,7 +168,6 @@ class MenuPanel {
         lcd.print(": ");
       }
 
-      Serial.print((long)&fields_sec[draw_index]);
       if (double_time && (fields_sec + draw_index) != NULL) {
         if ((draw_index_div % 2 == 1) && fields_sec[draw_index].valid) {
           lcd.print(fields_sec[draw_index].txt);
@@ -181,6 +182,7 @@ class MenuPanel {
     }
 
     void Action(byte index) {
+      action_index = index;
       if (actionCb != NULL)actionCb(index);
       if (index >= fields_count)return;
       if (!fields[index].valid)return;
