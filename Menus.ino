@@ -1,6 +1,8 @@
 #define Menu_Show(id) {[]() {menus[id].Show();}}
 
 void RegisterMenus() {
+  RegisterMenu(0,"MAIN");
+  
   MenuPanel *panel = RegisterMenu(MenuSelect_MENU_ID, "SEL", true, false);
   panel->AddExitField();
   panel->AddField("STATUS", Menu_Show(MenuStatus_MENU_ID));

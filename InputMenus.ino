@@ -1,5 +1,4 @@
 String IO_str = "";
-int input_prev_menu = 0;
 long last_input = 0;
 byte last_input_str = -1;
 byte str_iteration = 0;
@@ -30,7 +29,6 @@ void ShowConfirm(String txt, strFunc ifc) {
 
 void ShowTXTD(String txt, int delay) {
   IO_str = txt;
-  input_prev_menu = menu;
   menus[Menu_TXTDelay_MENU_ID].Show();
   loopI500 = 0;
   delayLeft = delay;
@@ -66,7 +64,7 @@ void MenuInput_Draw() {
   lcd.setCursor(0, 1);
   lcd.print(IO_str);
   if ((millis() - last_input) > 15000) {
-    menu = input_prev_menu;
+    Menu_Back();
     in_func(IO_str);
   }
 
@@ -132,7 +130,7 @@ void Menu_Confirm_Draw() {
 }
 
 void Menu_Confirm_Action(int item) {
-  menu = input_prev_menu;
+   Menu_Back();
   in_func(String(item));
 }
 
@@ -141,7 +139,7 @@ void Menu_TXTDelay_Draw() {
   lcd.print(IO_str);
   delayLeft --;
   if (delayLeft <= 0) {
-    menu = input_prev_menu;
+     Menu_Back();
   }
 }
 

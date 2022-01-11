@@ -91,12 +91,12 @@ void ButtonAction(bool isLong) {
   if (menu == MenuInput_MENU_ID) {
     if (isLong) {
       if (IO_str.length() < 1) {
-        menu = input_prev_menu;;
+        Menu_Back();
       } else {
         IO_str = IO_str.substring(0, IO_str.length() - 1);
       }
     } else {
-      menu = input_prev_menu;
+      Menu_Back();
       in_func(IO_str);
     }
   }

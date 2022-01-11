@@ -40,7 +40,7 @@ void DrawCurrentMenu() {
   lcd.print("ATos");
   lcd.setCursor(5, 0);
   lcd.print("#");
-  lcd.print(MENUS[menu]);
+  lcd.print(menus[menu].code);
   lcd.setCursor(11, 0);
   lcd.print(STATUS_STR[AT_STATUS]);
   lcd.setCursor(0, 1);

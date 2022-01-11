@@ -24,7 +24,6 @@
 const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "CALL"};
 const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", "roam", "smsfull"};
 
-
 long lastts = 0;
 String b = "";
 long lastOK = -150000;
@@ -82,12 +81,6 @@ struct SMSStruct2 {
   SMSStruct sms;
   int id;
 };
-
-const char *MenuStdExit_MENU[1] = {"EXIT"};
-const char *MENUS[] = {"MAIN", "SEL", "STA", "TIME", "SMS", "SMSP", "VIEW", "TV", "USAG", "SET", "PIN", "INP", "CNF", "TXD", "PHP", "PHB"};
-
-const byte MenuSelect_MENU_LEN = 6;
-const char *MenuSelect_MENU[MenuSelect_MENU_LEN] = {"EXIT", "STATUS", "TIMINGS", "SMS", "SETTINGS", "PHONEBOOK"};
 
 const byte MenuSelect_MENU_ID = 1;
 const byte MenuStatus_MENU_ID = 2;
@@ -270,7 +263,7 @@ class MenuPanel {
 
 MenuPanel menus[32];
 
-MenuPanel *RegisterMenu(byte index, String code, bool append_field_index, bool double_time) {
+MenuPanel *RegisterMenu(byte index, String code, bool append_field_index = false, bool double_time = false) {
   menus[index] = *(new MenuPanel());
   menus[index].code = code;
   menus[index].double_time = double_time;
