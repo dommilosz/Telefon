@@ -93,7 +93,7 @@ void MenuInput_Draw() {
 // |       | space |       |  
 // -------------------------
 
-String str_characters[] = {" ", ".,?!", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+String str_characters[] = {"  ", ".,?!", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
 
 void MenuInput_Action(int item) {
   if (IO_str.length() > 16) {
