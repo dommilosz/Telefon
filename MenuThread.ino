@@ -71,6 +71,7 @@ void loop_5ms() {
 }
 
 void loop_500ms() {
+  lcd.noCursor();
   DrawCurrentMenu();
 
   if ((AT_STATUS != _AT_STATUS) || (loopI % 5) == 0) {

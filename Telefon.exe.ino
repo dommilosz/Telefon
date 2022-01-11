@@ -105,6 +105,7 @@ const byte Menu_TXTDelay_MENU_ID = 13;
 const byte MenuPhoneBook_Pre_MENU_ID = 14;
 const byte MenuPhoneBook_MENU_ID = 15;
 const byte MenuPhoneBook_View_MENU_ID = 16;
+const byte TEST_UI_MENU_ID = 17;
 
 String l_status = "ALL";
 

@@ -8,6 +8,7 @@ void RegisterMenus() {
   panel->AddField("SMS", ShowMenuAndFetchSMS);
   panel->AddField("SETTINGS", Menu_Show(MenuSettings_MENU_ID));
   panel->AddField("PHONEBOOK", Menu_Show(MenuPhoneBook_Pre_MENU_ID));
+  panel->AddField("TEST UI", Menu_Show(TEST_UI_MENU_ID));
 
   panel = RegisterMenu(MenuStatus_MENU_ID, "STA", false, false);
   panel->AddExitField();
@@ -73,6 +74,14 @@ void RegisterMenus() {
   panel->UpdateField(6, "Edit", PEViewAction_Edit, true);
   panel->UpdateField(7, "Delete", PEViewAction_Delete, true);
   panel->SetGenerateCb(GenerateFields_PE_View);
+
+  panel = RegisterMenu(TEST_UI_MENU_ID, "TEUI", true, false);
+  panel->AddExitField();
+  panel->AddField("Normal Input", TestUI_NormalInput, true);
+  panel->AddField("Text   Input", TestUI_TextInput, true);
+  panel->AddField("Confirm Box", TestUI_Confirm, true);
+  panel->AddField("TextView", TestUI_TextView, true);
+  panel->AddField("TXDelay (3 ticks)", TestUI_TXD, true);
 
   registerInputMenus();
 
