@@ -39,7 +39,7 @@ void switchSMS(String status) {
     vsmses_tmp[i] = vsmses[i];
   }
   for (int i = 0; i < c; i++) {
-    vsmses[i] = vsmses_tmp[(c-1) - i];
+    vsmses[i] = vsmses_tmp[(c - 1) - i];
   }
 
   sms_count = c;
@@ -71,4 +71,68 @@ void ReadSMS() {
 void Cb_SMS(SMSStruct sms) {
   smses[sms_count] = sms;
   sms_count ++;
+}
+
+String sms_number;
+String sms_text;
+
+void SMS_Phonebook() {
+
+}
+
+void NewSMS_Show() {
+  menus[MenuSMS_New_MENU_ID].Show();
+  NewSMS_ChangeNumber("");
+  NewSMS_ChangeText("");
+}
+
+void NewSMS_ChangeNumber() {
+  ShowInput(NewSMS_ChangeNumber, "Enter NUMBER: ");
+}
+
+void NewSMS_ChangeNumber(String number) {
+  sms_number = number;
+  String d = "N: ";
+  d += number;
+  menus[menu].UpdateField_Txt(1, d);
+}
+
+void NewSMS_ChangeText() {
+  ShowInput(NewSMS_ChangeText, "Enter Text: ", true, true);
+}
+
+void NewSMS_ChangeText(String text) {
+  sms_text = text;
+  String d = "T: ";
+  d += text;
+  menus[menu].UpdateField_Txt(2, d);
+}
+
+void NewSMS_TextView() {
+  ShowTextView(sms_text);
+}
+
+void NewSMS_Send(){
+  InvokeOnWorker(NewSMS_Send_Invoke);
+}
+
+void NewSMS_Send_Invoke() {
+  if (sms_number.length() > 2 && sms_text.length() > 0) {
+    char number[sms_number.length()];
+    char text[sms_text.length()];
+    sms_number.toCharArray(number, sms_number.length()+1);
+    sms_text.toCharArray(text, sms_text.length()+1);
+    if (gsm.send(number, text)) {
+      Menu_Back();
+      ShowTXTD("SENT!", 4);
+    } else {
+      ShowTXTD("ERROR!", 4);
+    }
+  } else {
+    if (sms_number.length() <= 2) {
+      ShowTXTD("SHORT NUMBER!", 4);
+    } else {
+      ShowTXTD("MESSAGE NEEDED!", 4);
+    }
+  }
 }

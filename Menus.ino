@@ -1,8 +1,8 @@
 #define Menu_Show(id) {[]() {menus[id].Show();}}
 
 void RegisterMenus() {
-  RegisterMenu(0,"MAIN");
-  
+  RegisterMenu(0, "MAIN");
+
   MenuPanel *panel = RegisterMenu(MenuSelect_MENU_ID, "SEL", true, false);
   panel->AddExitField();
   panel->AddField("STATUS", Menu_Show(MenuStatus_MENU_ID));
@@ -32,6 +32,7 @@ void RegisterMenus() {
   panel = RegisterMenu(MenuSMS_PRE_MENU_ID, "SMSP", true, false);
   panel->AddExitField();
   panel->AddFields(6);
+  panel->AddField("New SMS",NewSMS_Show);
   panel->SetGenerateCb(GenerateFields_SMS_PRE);
 
   panel = RegisterMenu(MenuSMS_USAGE_MENU_ID, "USAG", false, false);
@@ -71,10 +72,11 @@ void RegisterMenus() {
 
   panel = RegisterMenu(MenuPhoneBook_View_MENU_ID, "VIEW", true, false);
   panel->AddExitField();
-  panel->AddFields(7);
-  panel->UpdateField(5, "Call", PEViewAction_Call, true);
-  panel->UpdateField(6, "Edit", PEViewAction_Edit, true);
-  panel->UpdateField(7, "Delete", PEViewAction_Delete, true);
+  panel->AddFields(4);
+  panel->AddField("Call", PEViewAction_Call, true);
+  panel->AddField("SMS [WIP]", SMS_Phonebook, true);
+  panel->AddField("Edit", PEViewAction_Edit, true);
+  panel->AddField("Delete", PEViewAction_Delete, true);
   panel->SetGenerateCb(GenerateFields_PE_View);
 
   panel = RegisterMenu(TEST_UI_MENU_ID, "TEUI", true, false);
@@ -85,6 +87,13 @@ void RegisterMenus() {
   panel->AddField("TextView", TestUI_TextView, true);
   panel->AddField("TXDelay (3 ticks)", TestUI_TXD, true);
 
+  panel = RegisterMenu(MenuSMS_New_MENU_ID,"NSMS",true,false);
+  panel->AddExitField();
+  panel->AddField("N: ",NewSMS_ChangeNumber);
+  panel->AddField("T: ",NewSMS_ChangeText);
+  panel->AddField("TextView", NewSMS_TextView);
+  panel->AddField("SEND", NewSMS_Send);
+  
   registerInputMenus();
 
 

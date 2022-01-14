@@ -38,3 +38,13 @@ String ReadResponse() {
   Serial.print(s);
   return s;
 }
+
+String forceStringToBeLength(String msg, int length) {
+  int l = msg.length();
+  if (l > length) {
+    String s2 = msg.substring(l - length, l + length);
+    Serial1.println(s2.length());
+    return s2;
+  }
+  return msg;
+}

@@ -6,19 +6,21 @@ strFunc in_func;
 int delayLeft = 0;
 String _placeholder = "";
 bool _is_string = false;
+bool _disableLimit = false;
 
 void ShowTextView(String txt) {
   IO_str = txt;
   menus[Menu_TV_MENU_ID].Show();
 }
 
-void ShowInput(strFunc ifc, String placeholder = "", bool isString = false) {
+void ShowInput(strFunc ifc, String placeholder = "", bool isString = false, bool disableLimit = false) {
   IO_str = "";
   menus[MenuInput_MENU_ID].Show();
   last_input = millis();
   in_func = ifc;
   _placeholder = placeholder;
   _is_string = isString;
+  _disableLimit = disableLimit;
 }
 
 void ShowConfirm(String txt, strFunc ifc) {
@@ -62,7 +64,7 @@ void MenuInput_Draw() {
   lcd.setCursor(0, 0);
   lcd.print(_placeholder);
   lcd.setCursor(0, 1);
-  lcd.print(IO_str);
+  lcd.print(forceStringToBeLength(IO_str,16));
   if ((millis() - last_input) > 15000) {
     Menu_Back();
     in_func(IO_str);
@@ -81,20 +83,20 @@ void MenuInput_Draw() {
 // |   1   |   2   |   3   |
 // |  .,?! |  abc  |  def  |
 // -------------------------
-// |   4   |   5   |   6   |  
-// |  ghi  |  jkl  |  mno  |  
+// |   4   |   5   |   6   |
+// |  ghi  |  jkl  |  mno  |
 // -------------------------
 // |   7   |   8   |   9   |
 // |  pqrs |  tuv  |  wxyz |
 // -------------------------
 // |       |   0   |       |
-// |       | space |       |  
+// |       | space |       |
 // -------------------------
 
 String str_characters[] = {"  ", ".,?!", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
 
 void MenuInput_Action(int item) {
-  if (IO_str.length() > 16) {
+  if (IO_str.length() > 16 && !_disableLimit) {
     return;
   }
   if (_is_string) {
@@ -130,7 +132,7 @@ void Menu_Confirm_Draw() {
 }
 
 void Menu_Confirm_Action(int item) {
-   Menu_Back();
+  Menu_Back();
   in_func(String(item));
 }
 
@@ -139,7 +141,7 @@ void Menu_TXTDelay_Draw() {
   lcd.print(IO_str);
   delayLeft --;
   if (delayLeft <= 0) {
-     Menu_Back();
+    Menu_Back();
   }
 }
 
