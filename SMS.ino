@@ -47,24 +47,30 @@ void switchSMS(String status) {
 }
 
 SMSStruct GetSms(int index, bool read = false) {
+  TakeATSemaphore();
   SMSStruct sms = gsm.read(index, read);
+  ReleaseATSemaphore();
   return sms;
 }
 
 void ReadSMS() {
   sms_count = 0;
+  TakeATSemaphore();
   gsm.setTextMode(true);
-
+  ReleaseATSemaphore();
+  
   for (int i = 0; i < 128; i++) {
     smses[i].error = true;
   }
 
+  TakeATSemaphore();
   gsm.list(Cb_SMS, false);
+  ReleaseATSemaphore();
 
   Serial.println("\n[SMSCount:]\n");
   sms_pages_count = ((sms_count - 1) / 7) + 1;
   Serial.print(sms_count);
-
+  ReleaseATSemaphore();
   switchSMS(l_status);
 }
 
@@ -113,7 +119,7 @@ void NewSMS_TextView() {
 }
 
 void NewSMS_Send(){
-  InvokeOnWorker(NewSMS_Send_Invoke);
+  NewSMS_Send_Invoke();
 }
 
 void NewSMS_Send_Invoke() {
@@ -122,12 +128,14 @@ void NewSMS_Send_Invoke() {
     char text[sms_text.length()];
     sms_number.toCharArray(number, sms_number.length()+1);
     sms_text.toCharArray(text, sms_text.length()+1);
+    TakeATSemaphore();
     if (gsm.send(number, text)) {
       Menu_Back();
       ShowTXTD("SENT!", 4);
     } else {
       ShowTXTD("ERROR!", 4);
     }
+    ReleaseATSemaphore();
   } else {
     if (sms_number.length() <= 2) {
       ShowTXTD("SHORT NUMBER!", 4);

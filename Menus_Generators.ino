@@ -1,5 +1,5 @@
 void ShowMenuAndFetchSMS() {
-  InvokeOnWorker(ReadSMS);
+  ReadSMS();
   menu = MenuSMS_PRE_MENU_ID;
   sms_menu_item = 0;
 }
@@ -10,25 +10,6 @@ void GenerateFields_Status(int draw_index) {
   String data = AT_STATUSES[draw_index - 1];
   data += ": ";
   data += (*((byte*)(&status_cache) + (draw_index - 1)));
-  menus[menu].UpdateField_Txt(draw_index, data);
-}
-
-void GenerateFields_Timings(int draw_index) {
-  if (draw_index < 1)return;
-
-  String data = "Last: ";
-
-  if (draw_index == 1) {
-    data += "5";
-  } else if (draw_index == 2) {
-    data += "500";
-  } else if (draw_index == 3) {
-    data += "1000";
-  }
-
-  data += ": ";
-  data += maxTimings[draw_index];
-
   menus[menu].UpdateField_Txt(draw_index, data);
 }
 
@@ -138,7 +119,7 @@ void GenerateFields_SMS_PRE(int draw_index) {
     menus[menu].UpdateField(draw_index, data,
     { []() {
         menus[MenuSMS_USAGE_MENU_ID].Show();
-        InvokeOnWorker(FetchUsage);
+        FetchUsage();
       }
     });
   }
@@ -180,15 +161,19 @@ void SMSViewAction_TextView() {
 
 void SMSViewAction_Mark_Read() {
   SMSStruct sms = *current_sms;
+  TakeATSemaphore();
   gsm.read(sms.id, true);
-  InvokeOnWorker(ReadSMS);
+  ReleaseATSemaphore();
+  ReadSMS();
 }
 
 void SMSViewAction_Delete() {
   SMSStruct sms = *current_sms;
+  TakeATSemaphore();
   gsm.deleteOne(sms.id);
+  ReleaseATSemaphore();
   menus[menu].Back();
-  InvokeOnWorker(ReadSMS);
+  ReadSMS();
 }
 
 void GenerateFields_PIN(int draw_index) {
@@ -227,7 +212,7 @@ void PIN_Enter_PIN() {
 }
 
 void PhoneBook_Launch() {
-  InvokeOnWorker(getPhoneBook);
+  getPhoneBook();
   menus[MenuPhoneBook_MENU_ID].Show();
 }
 
@@ -289,9 +274,11 @@ void PEViewAction_Edit() {
 
 void PEViewAction_Delete() {
   PhoneBookEntry pe = *current_pe;
+  TakeATSemaphore();
   gsm.deletePhoneBookEntry(pe.id);
+  ReleaseATSemaphore();
   menu = MenuPhoneBook_MENU_ID;
-  InvokeOnWorker(getPhoneBook);
+  getPhoneBook();
 }
 
 void GenerateFields_PE_View(int draw_index) {

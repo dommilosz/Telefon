@@ -13,12 +13,15 @@ void setPin(String input) {
   Serial.println(c);
   Serial.println(input);
 
+  
   if (pin_status == 1) {
+    TakeATSemaphore();
     if (gsm.enterPinCode(c)) {
       ShowTXTD("SUCCESS", 2);
     } else {
       ShowTXTD("ERROR", 2);
     }
+    ReleaseATSemaphore();
   }
   if (pin_status == 2) {
     puk[input.length()] = 0;
@@ -27,17 +30,21 @@ void setPin(String input) {
     return;
   }
   else if (pin_enabled) {
+    TakeATSemaphore();
     if (gsm.disablePinCode(c)) {
       ShowTXTD("SUCCESS", 2);
     } else {
       ShowTXTD("ERROR", 2);
     }
+    ReleaseATSemaphore();
   } else {
+    TakeATSemaphore();
     if (gsm.enablePinCode(c)) {
       ShowTXTD("SUCCESS", 2);
     } else {
       ShowTXTD("ERROR", 2);
     }
+    ReleaseATSemaphore();
   }
   lcd.setCursor(0, 1);
   lcd.print("LOADING...          ");
@@ -49,11 +56,13 @@ void UnlockPUK(String newpin) {
   c[newpin.length()] = 0;
   newpin.toCharArray(c, newpin.length() + 1);
 
+  TakeATSemaphore();
   if (gsm.enterPukCode(puk, c)) {
     ShowTXTD("SUCCESS", 2);
   } else {
     ShowTXTD("ERROR", 2);
   }
+  ReleaseATSemaphore();
 }
 
 void changePin(String pin) {
@@ -67,9 +76,11 @@ void changePin2(String newpin) {
   char c[8];
   c[newpin.length()] = 0;
   newpin.toCharArray(c, newpin.length() + 1);
+  TakeATSemaphore();
   if (gsm.changePinCode(puk, c)) {
     lcd.print("SUCCESS");
   } else {
     lcd.print("ERROR");
   }
+  ReleaseATSemaphore();
 }

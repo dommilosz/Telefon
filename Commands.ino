@@ -21,6 +21,13 @@ void ExecCommand(Stream *stream) {
         }
 
       }
+      if (c == 'g') {
+        if (stream->read() == '1') {
+          gsm.setLogger(true, &Serial);
+        } else {
+          gsm.setLogger(false, &Serial);
+        }
+      }
       if (c == 'b') {
         if (stream->read() == '1') {
           ButtonAction(true);
@@ -29,11 +36,13 @@ void ExecCommand(Stream *stream) {
         }
       }
       if (c == 'h') {
+        TakeATSemaphore();
         if (stream->read() == '1') {
           gsm.answer();
         } else {
           gsm.hangoff();
         }
+        ReleaseATSemaphore();
       }
       buff = "";
     }

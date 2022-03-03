@@ -1,22 +1,20 @@
 void setup() {
   Serial.begin(115200);
   Serial2.begin(57600);
-
-  Serial2.print("AT\r");
-  //Serial2.readStringUntil("OK");
   Serial.setTimeout(1000);
   pixels.begin();
   SetLEDColor(0, 255, 0);
 
-  lcd.init();                      // initialize the lcd
+  lcd.init();
   lcd.backlight();
+
+  InitInterrupt();
 
   board_buffor[0] = 255;
 }
 
 String buff = "";
 void loop() {
-  delay(5);
   AT_STATUS = STATUS_OK;
 
   ExecCommand(&Serial);
@@ -26,7 +24,7 @@ void loop() {
   }
 
   CheckConnection();
-  ExecuteQueue();
+  hng_button.update();
 }
 
 void CallBuffer() {
@@ -38,5 +36,6 @@ void CallBuffer() {
 
 void InitInterrupt() {
   attachInterrupt(digitalPinToInterrupt(PIN_INPUT), Board_Int, RISING);
-  attachInterrupt(digitalPinToInterrupt(PIN_HANG), Hang_Int, CHANGE);
+  //attachInterrupt(digitalPinToInterrupt(PIN_HANG), Hang_Int, CHANGE);
+  hng_button.setCallback(Hang_Int);
 }

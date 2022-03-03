@@ -1,12 +1,16 @@
 #include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal_I2C.h>
 #include <GSMSim.h>
+#include "coop_threads.h"
+#include <ButtonDebounce.h>
+
+#define THREAD_STACK_SIZE 0x500U
 
 #define PIN_INPUT 2
 #define InputRead() digitalRead(PIN_INPUT)
 
 #define PIN_HANG  3
-#define HangRead() digitalRead(PIN_HANG)
+ButtonDebounce hng_button(PIN_HANG, 250);
 
 #define PIN_RGB   4
 
@@ -57,24 +61,6 @@ typedef void (* voidFunc)();
 typedef void (* strFunc)(String r);
 typedef void (* intFunc)(int r);
 class MenuPanel;
-
-voidFunc InvokeQueue[16];
-int invokePointer = 0;
-
-void InvokeOnWorker(voidFunc func) {
-  if (invokePointer < 15) {
-    InvokeQueue[invokePointer] = func;
-    invokePointer++;
-  }
-}
-
-void ExecuteQueue() {
-  if (invokePointer > 0) {
-
-    InvokeQueue[invokePointer - 1]();
-    invokePointer--;
-  }
-}
 
 struct SMSStruct2 {
   SMSStruct sms;
@@ -132,12 +118,6 @@ class MenuPanel {
         return;
       }
 
-      if (invokePointer > 0) {
-        lcd.print("Loading...");
-        Reset();
-        return;
-      }
-      
       if (menu != id)return;
       if (double_time) {
         draw_index = draw_index_div / 2;
@@ -251,9 +231,7 @@ class MenuPanel {
       }
     }
 
-    void AddExitField() {
-      AddField("EXIT", Menu_Back, true);
-    }
+    void AddExitField();
 
     void Reset() {
       draw_index = 0;

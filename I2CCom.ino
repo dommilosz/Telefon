@@ -33,10 +33,14 @@ void OnInterrupt(int addr, int type, int length) {
       ButtonAction(true);
     } else if (c == 'C') {
       //accept
+      TakeATSemaphore();
       gsm.answer();
+      ReleaseATSemaphore();
     } else if (c == 'D') {
       //hang
+      TakeATSemaphore();
       gsm.hangoff();
+      ReleaseATSemaphore();
     }
 
   }

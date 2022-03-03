@@ -17,11 +17,6 @@ void RegisterMenus() {
   panel->AddFields(7);
   panel->SetGenerateCb(GenerateFields_Status);
 
-  panel = RegisterMenu(MenuTimings_MENU_ID, "TIME", false, false);
-  panel->AddExitField();
-  panel->AddFields(3);
-  panel->SetGenerateCb(GenerateFields_Timings);
-
   panel = RegisterMenu(MenuSMS_MENU_ID, "SMS", false, true);
   panel->AddExitField();
   panel->AddFields(9);
@@ -101,5 +96,9 @@ void RegisterMenus() {
 }
 
 void Menu_Back() {
+  menus[menu].Back();
+}
+
+inline void MenuPanel::AddExitField() {
   menus[menu].Back();
 }

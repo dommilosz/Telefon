@@ -1,12 +1,17 @@
 bool TestAT() {
-  return gsm.checkConnection(1);
+  TakeATSemaphore();
+  bool v = gsm.checkConnection(1);
+  ReleaseATSemaphore();
+  return v;
 }
 
 GSMStatus status_cache;
 
 void VoiceCall(String * number) {
   Serial.println(*number);
+  TakeATSemaphore();
   bool resp = gsm.call(number);
+  ReleaseATSemaphore();
   if (!resp) {
     LastMenuMsg = "ERR: " + resp;
   }
@@ -25,7 +30,6 @@ void CheckConnection() {
   if (diffOK > 15000) {
     AT_STATUS = STATUS_NOAT;
     if (diffAT > 500) {
-      //Serial2.begin(9600);
       if (TestAT()) {
         lastOK = millis();
       }
@@ -43,9 +47,13 @@ void CheckConnection() {
   if (AT_STATUS != STATUS_NOAT && diffAT > 500 && (diffCREG > 30000 || (diffCREG > 5000 && (!status_cache.service||pe_error)))) {
     //+CIND: 5,0,0,0,0,0,1
     //+CIND:("battchg",(0-5)), ("signal",(0-5)), ("service",(0,1)), ("message",(0,1)),("call",(0,1)), ("roam",(0,1)), ("smsfull",(0,1))
+    TakeATSemaphore();
     status_cache = gsm.getStatus();
+    ReleaseATSemaphore();
     lastCREG = millis();
+    TakeATSemaphore();
     op_name = String(gsm.operatorNameFromSim());
+    ReleaseATSemaphore();
     FetchPIN();
   }
 
@@ -79,16 +87,22 @@ int pe_pages_count = 0;
 int MemUsage[] = {0, 0};
 
 void FetchUsage() {
+  TakeATSemaphore();
   gsm.getPreferredSMSStorage(MemUsage);
+  ReleaseATSemaphore();
 }
 
 void FetchPIN() {
+  TakeATSemaphore();
   pin_status = gsm.pinStatus();
+  ReleaseATSemaphore();
   FetchPE();
 }
 
 void FetchPE() {
+  TakeATSemaphore();
   int pe = gsm.getPinStatus();
+  ReleaseATSemaphore();
   pe_error= false;
   if (pe == 0) {
     pin_enabled = false;
@@ -100,4 +114,16 @@ void FetchPE() {
     Serial.println(pe);
     pe_error = true;
   }
+}
+
+bool at_semaphore = false;
+void TakeATSemaphore(){
+  while(at_semaphore){
+    
+  }
+  at_semaphore = true;
+}
+
+void ReleaseATSemaphore(){
+  at_semaphore = false;
 }
