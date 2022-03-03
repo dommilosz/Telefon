@@ -12,6 +12,12 @@ void setup1() {
   InitInterrupt();
   board_buffi = 0;
   RegisterMenus();
+
+  I2CCom.begin();
+  I2CCom.OnDeviceConnected = OnConnected;
+  I2CCom.OnDeviceDisconnected = OnDisconnected;
+  I2CCom.OnData = OnInterrupt;
+  I2CCom.Ignore(0x27);
 }
 
 
@@ -22,31 +28,23 @@ void loop1() {
   if (current - last500 > maxTimings[1])maxTimings[1] = current - last500;
   if (current - last1000 > maxTimings[2])maxTimings[2] = current - last1000;
 
-  if ((current - last5) >= 5) {
-    loop_5ms();
-    loopI ++;
-    if (loopI > 999) {
-      loopI = 0;
-    }
-    last5 = millis();
-  }
-  if ((current - last500) >= 500) {
+  if ((current - last1000) >= 1000) {
+    loop_1s();
+    last1000 = millis();
+  } else if ((current - last500) >= 500) {
     loop_500ms();
     loopI500++;
     if (loopI500 > 999) {
       loopI500 = 0;
     }
     last500 = millis();
-  }
-  if ((current - last1000) >= 1000) {
-    loop_1s();
-    last1000 = millis();
-  }
-
-  if (menu == MenuInput_MENU_ID) {
-    digitalWrite(PIN_BTN_LED, HIGH);
-  } else {
-    digitalWrite(PIN_BTN_LED, LOW);
+  } else if ((current - last5) >= 5) {
+    loop_5ms();
+    loopI ++;
+    if (loopI > 999) {
+      loopI = 0;
+    }
+    last5 = millis();
   }
 
   delay(1);
@@ -68,6 +66,7 @@ void HandleBuffer() {
 
 void loop_5ms() {
   FetchBoard();
+  I2CCom.ScanDevices();
 }
 
 void loop_500ms() {
@@ -78,6 +77,15 @@ void loop_500ms() {
     _AT_STATUS = AT_STATUS;
     UpdateLED();
   }
+
+  int8_t data[1];
+  data[0] = menu == MenuInput_MENU_ID;
+  I2CCom.SendDataByID(20, 0x10, data, 1);
+
+  //I2CCom._wire->beginTransmission(8);
+  //I2CCom._wire->write(0x10);
+  //I2CCom._wire->write(menu == MenuInput_MENU_ID);
+  //I2CCom._wire->endTransmission();
 }
 
 void loop_1s() {

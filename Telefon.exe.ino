@@ -10,9 +10,6 @@
 
 #define PIN_RGB   4
 
-#define PIN_BTN   6
-#define PIN_BTN_LED 5
-
 #define STATUS_OK 0
 #define STATUS_NOAT 1
 #define STATUS_ERROR 2
@@ -20,6 +17,8 @@
 #define STATUS_UNREG 4
 #define STATUS_CALL 5
 
+#include "I2CCom.h"
+I2CCom_Master I2CCom(&Wire1);
 
 const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "CALL"};
 const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", "roam", "smsfull"};
