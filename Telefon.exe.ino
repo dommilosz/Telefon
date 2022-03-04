@@ -29,9 +29,6 @@ const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", 
 
 long lastts = 0;
 String b = "";
-long lastOK = -150000;
-long lastAT = 0;
-long lastCREG = 0;
 
 uint8_t AT_STATUS = STATUS_OK;
 uint8_t _AT_STATUS = STATUS_OK;
@@ -87,6 +84,7 @@ const byte TEST_UI_MENU_ID = 17;
 const byte MenuSMS_New_MENU_ID = 18;
 
 String l_status = "ALL";
+String buff = "";
 
 struct MenuField {
   String txt;

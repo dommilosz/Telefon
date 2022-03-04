@@ -29,7 +29,6 @@ void HandleBuffer() {
     CallBuffer();
   }
 
-
   board_buffor[0] = 255;
   board_buffi = 0;
 }

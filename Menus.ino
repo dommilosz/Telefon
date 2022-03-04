@@ -27,7 +27,7 @@ void RegisterMenus() {
   panel = RegisterMenu(MenuSMS_PRE_MENU_ID, "SMSP", true, false);
   panel->AddExitField();
   panel->AddFields(6);
-  panel->AddField("New SMS",NewSMS_Show);
+  panel->AddField("New SMS", NewSMS_Show);
   panel->SetGenerateCb(GenerateFields_SMS_PRE);
 
   panel = RegisterMenu(MenuSMS_USAGE_MENU_ID, "USAG", false, false);
@@ -82,13 +82,13 @@ void RegisterMenus() {
   panel->AddField("TextView", TestUI_TextView, true);
   panel->AddField("TXDelay (3 ticks)", TestUI_TXD, true);
 
-  panel = RegisterMenu(MenuSMS_New_MENU_ID,"NSMS",true,false);
+  panel = RegisterMenu(MenuSMS_New_MENU_ID, "NSMS", true, false);
   panel->AddExitField();
-  panel->AddField("N: ",NewSMS_ChangeNumber);
-  panel->AddField("T: ",NewSMS_ChangeText);
+  panel->AddField("N: ", NewSMS_ChangeNumber);
+  panel->AddField("T: ", NewSMS_ChangeText);
   panel->AddField("TextView", NewSMS_TextView);
   panel->AddField("SEND", NewSMS_Send);
-  
+
   registerInputMenus();
 
 

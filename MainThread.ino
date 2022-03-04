@@ -13,17 +13,14 @@ void setup() {
   board_buffor[0] = 255;
 }
 
-String buff = "";
 void loop() {
-  AT_STATUS = STATUS_OK;
-
   ExecCommand(&Serial);
 
   while (Serial2.available()) {
     Serial.write(Serial2.read());
   }
 
-  CheckConnection();
+  AT_STATUS = CheckConnection();
   hng_button.update();
 }
 

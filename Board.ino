@@ -13,7 +13,6 @@ void Board_Int() {
 }
 
 void Hang_Int(const int hangState) {
-  Serial.println("hang");
   TakeATSemaphore();
   if (hangState) {
     gsm.hangoff();

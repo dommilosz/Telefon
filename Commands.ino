@@ -2,7 +2,9 @@ void ExecCommand(Stream *stream) {
   while (stream->available()) {
     char c = stream->read();
     if (c == '\r') {
+      TakeATSemaphore();
       Serial2.print(buff + "\r");
+      ReleaseATSemaphore();
       buff = "";
     }
     buff += c;

@@ -21,30 +21,23 @@ String op_name = "";
 unsigned int pin_status = -1;
 bool pin_enabled = false;
 
-void CheckConnection() {
+long lastOK   = -100000;
+long lastCREG = -100000;
+
+int CheckConnection() {
   long current = millis();
   long diffOK = current - lastOK;
-  long diffAT = current - lastAT;
   long diffCREG = current - lastCREG;
 
-  if (diffOK > 15000) {
-    AT_STATUS = STATUS_NOAT;
-    if (diffAT > 500) {
-      if (TestAT()) {
-        lastOK = millis();
-      }
-      lastAT = millis();
-    }
-  } else if (diffOK > 5000) {
-    if (diffAT > 500) {
-      if (TestAT()) {
-        lastOK = millis();
-      }
-      lastAT = millis();
+  if (diffOK > 500) {
+    if (TestAT()) {
+      lastOK = millis();
+    } else if (diffOK > 15000) {
+      return STATUS_NOAT;
     }
   }
 
-  if (AT_STATUS != STATUS_NOAT && diffAT > 500 && (diffCREG > 30000 || (diffCREG > 5000 && (!status_cache.service||pe_error)))) {
+  if (diffCREG > 30000 || (diffCREG > 5000 && (!status_cache.service || pe_error))) {
     //+CIND: 5,0,0,0,0,0,1
     //+CIND:("battchg",(0-5)), ("signal",(0-5)), ("service",(0,1)), ("message",(0,1)),("call",(0,1)), ("roam",(0,1)), ("smsfull",(0,1))
     TakeATSemaphore();
@@ -58,10 +51,10 @@ void CheckConnection() {
   }
 
   if (status_cache.service != 1) {
-    AT_STATUS = STATUS_UNREG;
+    return STATUS_UNREG;
   }
   if (status_cache.call == 1) {
-    AT_STATUS = STATUS_CALL;
+    return STATUS_CALL;
   }
   if (pin_status != 0) {
     if (pin_status == 1) {
@@ -71,7 +64,7 @@ void CheckConnection() {
       LastMenuMsg = "ENTER PUK";
     }
   }
-
+  return STATUS_OK;
 }
 
 SMSStruct smses[128];
@@ -103,7 +96,7 @@ void FetchPE() {
   TakeATSemaphore();
   int pe = gsm.getPinStatus();
   ReleaseATSemaphore();
-  pe_error= false;
+  pe_error = false;
   if (pe == 0) {
     pin_enabled = false;
   }
@@ -117,13 +110,13 @@ void FetchPE() {
 }
 
 bool at_semaphore = false;
-void TakeATSemaphore(){
-  while(at_semaphore){
-    
+void TakeATSemaphore() {
+  while (at_semaphore) {
+
   }
   at_semaphore = true;
 }
 
-void ReleaseATSemaphore(){
+void ReleaseATSemaphore() {
   at_semaphore = false;
 }
