@@ -100,5 +100,5 @@ void Menu_Back() {
 }
 
 inline void MenuPanel::AddExitField() {
-  menus[menu].Back();
+  AddField("EXIT",Menu_Back);
 }

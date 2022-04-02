@@ -112,7 +112,7 @@ void FetchPE() {
 bool at_semaphore = false;
 void TakeATSemaphore() {
   while (at_semaphore) {
-
+    coop_idle(20);
   }
   at_semaphore = true;
 }

@@ -12,6 +12,7 @@ void setup1() {
   coop_sched_thread(loop_5ms, "loop_5ms", THREAD_STACK_SIZE, NULL);
   coop_sched_thread(loop_1s, "loop_1s", THREAD_STACK_SIZE, NULL);
   coop_sched_thread(i2cScan, "i2c_scan", THREAD_STACK_SIZE, NULL);
+  coop_sched_thread(i2cGcardRenderLoop, "i2c_gcard", THREAD_STACK_SIZE, NULL);
   coop_sched_service();
 }
 

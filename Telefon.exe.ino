@@ -23,6 +23,8 @@ ButtonDebounce hng_button(PIN_HANG, 250);
 
 #include "I2CCom.h"
 I2CCom_Master I2CCom(&Wire1);
+#include "GraphicsCardI2CCom.h"
+GraphicsCardI2CCom gI2C(&I2CCom);
 
 const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "CALL"};
 const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", "roam", "smsfull"};
@@ -92,6 +94,17 @@ struct MenuField {
   bool valid, numbered;
 };
 
+bool gc_changed = false;
+void SetAsset(int asset, String *txt) {
+  int length = txt->length();
+  char buff[length + 2];
+  txt->toCharArray(buff, length + 1);
+  buff[length + 1] = 0;
+  if (gI2C.WriteAssetOrCRC(asset, (uint8_t*)buff, sizeof(buff)) != 250) {
+    gc_changed = true;
+  }
+}
+
 class MenuPanel {
   public:
     String code;
@@ -108,8 +121,10 @@ class MenuPanel {
     intFunc generateCb = NULL;
     voidFunc draw_override = NULL;
     intFunc actionCb = NULL;
+    String additional_info = ""; //page number, etc.
 
     void Draw() {
+      additional_info = "";
       lcd.setCursor(0, 1);
       if (draw_override != NULL) {
         draw_override();
@@ -129,6 +144,16 @@ class MenuPanel {
       }
 
       if (generateCb != NULL)generateCb(draw_index);
+
+      if (additional_info.length() > 0) {
+        lcd.setCursor(0, 0);
+        lcd.print("         ");
+        lcd.setCursor(0, 0);
+        lcd.print(additional_info);
+        lcd.setCursor(0, 1);
+      }
+
+
       if (!fields[draw_index].valid) {
         draw_index_div++;
         Draw();
@@ -142,15 +167,57 @@ class MenuPanel {
 
       if (double_time && (fields_sec + draw_index) != NULL) {
         if ((draw_index_div % 2 == 1) && fields_sec[draw_index].valid) {
-          lcd.print(fields_sec[draw_index].txt);
+          lcd.print(fields_sec[draw_index].txt.substring(0, 15));
         } else {
-          lcd.print(fields[draw_index].txt);
+          lcd.print(fields[draw_index].txt.substring(0, 15));
         }
       } else {
-        lcd.print(fields[draw_index].txt);
+        lcd.print(fields[draw_index].txt.substring(0, 15));
       }
 
       draw_index_div++;
+    }
+
+    void DrawGC() {
+      additional_info = "";
+      if (draw_override != NULL) {
+        draw_override();
+        return;
+      }
+
+      if (menu != id)return;
+      int draw_index = 0;
+      for (int draw_index = 0; draw_index < 10; draw_index++) {
+        if (generateCb != NULL)generateCb(draw_index);
+        SetAsset(12, &additional_info);
+        String asset = "";
+        if (draw_index >= fields_count) {
+          SetAsset(draw_index + 1, &asset);
+          break;
+        }
+        if (!fields[draw_index].valid) {
+          continue;
+        }
+
+        if (append_field_index || fields[draw_index].numbered) {
+          asset += draw_index;
+          asset += ": ";
+        }
+
+        if (double_time && (fields_sec + draw_index) != NULL) {
+          if (fields_sec[draw_index].valid) {
+            asset += fields[draw_index].txt;
+            asset + "   -  ";
+            asset += fields_sec[draw_index].txt;
+          } else {
+            asset += fields[draw_index].txt;
+          }
+        } else {
+          asset += fields[draw_index].txt;
+        }
+        SetAsset(draw_index + 1, &asset);
+
+      }
     }
 
     void Action(byte index) {

@@ -14,13 +14,10 @@ void GenerateFields_Status(int draw_index) {
 }
 
 void GenerateFields_SMS(int draw_index) {
-  lcd.setCursor(0, 0);
-  lcd.print("         ");
-  lcd.setCursor(0, 0);
-  lcd.print(sms_page + 1);
-  lcd.print("/");
-  lcd.print(sms_pages_count);
-  lcd.setCursor(0, 1);
+  menus[menu].additional_info = "";
+  menus[menu].additional_info += sms_page + 1;
+  menus[menu].additional_info += "/";
+  menus[menu].additional_info += sms_pages_count;
 
   if (draw_index > 0 && draw_index < 8) {
     SMSStruct *sms_ptr = vsmses[(sms_page * 7) + (draw_index - 1)];
@@ -203,7 +200,7 @@ void PIN_Change_PIN() {
 
 void PIN_Enter_PIN() {
   if (pe_error) {
-    lcd.print("PIN: Fetching");
+    
   } else if (pin_status == 2) {
     ShowInput(setPin, "Enter PUK:");
   } else {
@@ -217,31 +214,22 @@ void PhoneBook_Launch() {
 }
 
 void GenerateFields_PhoneBook(int draw_index) {
-  lcd.setCursor(0, 0);
-  lcd.print("         ");
-  lcd.setCursor(0, 0);
-  lcd.print(sms_page + 1);
-  lcd.print("/");
-  lcd.print(pe_pages_count);
-  lcd.setCursor(0, 1);
+  menus[menu].additional_info = "";
+  menus[menu].additional_info += sms_page + 1;
+  menus[menu].additional_info += "/";
+  menus[menu].additional_info += sms_pages_count;
 
   if (draw_index > 0 && draw_index < 8) {
     PhoneBookEntry pe = phoneBook[(sms_page * 7) + (draw_index - 1)];
     if (!pe.error) {
-      if (menuItem % 2 == 0) {
-        lcd.print(pe.name.substring(0, 15));
-      } else {
-        lcd.print(pe.phoneno.substring(0, 15));
-      }
-
-      menus[menu].UpdateField(draw_index, pe.phoneno.substring(0, 15),
+      menus[menu].UpdateField(draw_index, pe.phoneno,
       { []() {
           selected_sms = menus[menu].action_index - 1;
           current_pe = &phoneBook[(sms_page * 7) + (menus[menu].action_index - 1)];
           menus[MenuPhoneBook_View_MENU_ID].Show();
         }
       }, true);
-      menus[menu].UpdateField_D(draw_index, pe.name.substring(0, 15), true);
+      menus[menu].UpdateField_D(draw_index, pe.name, true);
 
     } else {
       menus[menu].fields[draw_index].valid = false;
