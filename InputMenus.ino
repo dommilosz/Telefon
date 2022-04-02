@@ -40,18 +40,11 @@ void ShowTXTD(String txt, int delay) {
 //Menu_TV
 //
 
-void Menu_TV_Draw(int draw_index) {
+void Menu_TV_Draw() {
   String data = IO_str;
-  if (data.length() > 16) {
-    data = IO_str.substring(loopI500);
-    if (data.length() < 14) {
-      loopI500 = 0;
-    }
-  }
-  if (data.length() > 16) {
-    data = data.substring(0, 17);
-  }
-  menus[menu].UpdateField_Txt(0, data);
+  menus[menu].secondary_trimType = 2;
+  menus[menu].primary_line = "TextView:";
+  menus[menu].secondary_line = data;
 }
 
 //
@@ -59,21 +52,18 @@ void Menu_TV_Draw(int draw_index) {
 //
 
 void MenuInput_Draw() {
-  lcd.clear();
-  lcd.cursor();
-  lcd.setCursor(0, 0);
-  lcd.print(_placeholder);
-  lcd.setCursor(0, 1);
-  lcd.print(forceStringToBeLength(IO_str,16));
+  menus[menu].primary_line = _placeholder;
+  menus[menu].secondary_line = IO_str;
+  menus[menu].secondary_trimType = 1;
   if ((millis() - last_input) > 15000) {
     Menu_Back();
     in_func(IO_str);
   }
 
   if ((millis() - last_input) < 5000 || !_is_string) {
-    lcd.setCursor(IO_str.length() - 1, 1);
+    menus[menu].setCursor(IO_str.length() - 1, 1);
   } else {
-    lcd.setCursor(IO_str.length(), 1);
+    menus[menu].setCursor(IO_str.length(), 1);
   }
 
 }
@@ -127,8 +117,7 @@ void MenuInput_Action(int item) {
 //
 
 void Menu_Confirm_Draw() {
-  lcd.setCursor(0, 1);
-  lcd.print(IO_str);
+  menus[menu].secondary_line = IO_str;
 }
 
 void Menu_Confirm_Action(int item) {
@@ -137,8 +126,7 @@ void Menu_Confirm_Action(int item) {
 }
 
 void Menu_TXTDelay_Draw() {
-  lcd.setCursor(0, 1);
-  lcd.print(IO_str);
+  menus[menu].secondary_line = IO_str;
   delayLeft --;
   if (delayLeft <= 0) {
     Menu_Back();
@@ -146,7 +134,6 @@ void Menu_TXTDelay_Draw() {
 }
 
 void registerInputMenus() {
-  //const char *MENUS[] = {"", "", "", "", "", "", "", "TV", "", "", "", "INP", "CNF", "TXD", "", ""};
   MenuPanel *panel = RegisterMenu(MenuInput_MENU_ID, "INP", false, false);
   panel->draw_override = MenuInput_Draw;
   panel->actionCb = MenuInput_Action;
@@ -160,7 +147,7 @@ void registerInputMenus() {
 
   panel = RegisterMenu(Menu_TV_MENU_ID, "TV", false, false);
   panel->AddField("", Menu_Back);
-  panel->SetGenerateCb(Menu_TV_Draw);
+  panel->draw_override = Menu_TV_Draw;
 }
 
 //

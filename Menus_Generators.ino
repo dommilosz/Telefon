@@ -24,14 +24,14 @@ void GenerateFields_SMS(int draw_index) {
     if (sms_ptr != NULL) {
       SMSStruct sms = *sms_ptr;
       if (!sms.error) {
-        menus[menu].UpdateField(draw_index, sms.phoneno.substring(0, 15),
+        menus[menu].UpdateField(draw_index, sms.phoneno,
         { []() {
             selected_sms = menus[menu].action_index;
             current_sms = vsmses[(sms_page * 7) + (menus[menu].action_index - 1)];
             menus[MenuSMS_View_MENU_ID].Show();
           }
         }, true);
-        menus[menu].UpdateField_D(draw_index, sms.message.substring(0, 15), true);
+        menus[menu].UpdateField_D(draw_index, sms.message, true);
       } else {
         menus[menu].fields[draw_index].valid = false;
       }
@@ -137,11 +137,11 @@ void GenerateFields_SMS_View(int draw_index) {
   SMSStruct sms = *current_sms;
   if (draw_index == 1) {
     String data = "N: ";
-    data += sms.phoneno.substring(0, 15);
+    data += sms.phoneno;
     menus[menu].UpdateField_Txt(draw_index, data);
   }
   if (draw_index == 2) {
-    menus[menu].UpdateField_Txt(draw_index, sms.message.substring(0, 15));
+    menus[menu].UpdateField_Txt(draw_index, sms.message);
   }
   if (draw_index == 3) {
     menus[menu].UpdateField_Txt(draw_index, sms.status);
@@ -273,11 +273,11 @@ void GenerateFields_PE_View(int draw_index) {
   PhoneBookEntry pe = *current_pe;
   if (draw_index == 0) {
     String data = "N: ";
-    data += pe.phoneno.substring(0, 15);
+    data += pe.phoneno;
     menus[menu].UpdateField_Txt(draw_index, data);
   }
   if (draw_index == 1) {
-    menus[menu].UpdateField_Txt(draw_index, pe.name.substring(0, 15));
+    menus[menu].UpdateField_Txt(draw_index, pe.name);
   }
   if (draw_index == 2) {
     String data = "Type: ";

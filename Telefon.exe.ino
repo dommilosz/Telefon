@@ -90,6 +90,7 @@ String buff = "";
 
 struct MenuField {
   String txt;
+  String ftxt;
   voidFunc action;
   bool valid, numbered;
 };
@@ -122,12 +123,65 @@ class MenuPanel {
     voidFunc draw_override = NULL;
     intFunc actionCb = NULL;
     String additional_info = ""; //page number, etc.
+    String primary_line;
+    String secondary_line;
+    int secondary_trimType = 0;
+    int primary_trimType = 0;
+    int c1 = -1;
+    int c2 = -1;
 
     void Draw() {
+      c1 = -1;
+      c2 = -1;
       additional_info = "";
+      lcd.noCursor();
       lcd.setCursor(0, 1);
+      secondary_trimType = 0;
+      primary_trimType = 0;
       if (draw_override != NULL) {
         draw_override();
+        lcd.setCursor(0, 0);
+        if (primary_trimType == 1) {
+          lcd.print(forceStringToBeLength(primary_line, 16));
+        } else if (primary_trimType == 0) {
+          lcd.print(primary_line.substring(0, 15));
+        } else if (primary_trimType == 2) {
+          String data = primary_line;
+          if (primary_line.length() > 16) {
+            String data = primary_line.substring(loopI500);
+            if (data.length() < 14) {
+              loopI500 = 0;
+            }
+          }
+          if (data.length() > 16) {
+            data = data.substring(0, 17);
+          }
+          lcd.print(data);
+        }
+
+        lcd.setCursor(0, 1);
+        if (secondary_trimType == 1) {
+          lcd.print(forceStringToBeLength(secondary_line, 16));
+        } else if (secondary_trimType == 0) {
+          lcd.print(secondary_line.substring(0, 15));
+        } else if (secondary_trimType == 2) {
+          String data = secondary_line;
+          if (secondary_line.length() > 16) {
+            data = secondary_line.substring(loopI500);
+            if (data.length() < 14) {
+              loopI500 = 0;
+            }
+          }
+          if (data.length() > 16) {
+            data = data.substring(0, 17);
+          }
+          lcd.print(data);
+        }
+
+        if (c1 >= 0 && c2 >= 0) {
+          lcd.setCursor(c1, c2);
+          lcd.cursor();
+        }
         return;
       }
 
@@ -179,9 +233,27 @@ class MenuPanel {
     }
 
     void DrawGC() {
+      c1 = -1;
+      c2 = -1;
       additional_info = "";
       if (draw_override != NULL) {
         draw_override();
+        SetAsset(1, &primary_line);
+        SetAsset(2, &secondary_line);
+
+        SetAsset(3, &additional_info);
+        SetAsset(4, &additional_info);
+        SetAsset(5, &additional_info);
+        SetAsset(6, &additional_info);
+        SetAsset(7, &additional_info);
+        SetAsset(8, &additional_info);
+        SetAsset(9, &additional_info);
+        SetAsset(10, &additional_info);
+
+        if (c1 >= 0 && c2 >= 0) {
+          //maybe do smth with cursor.
+        }
+
         return;
       }
 
@@ -204,16 +276,20 @@ class MenuPanel {
           asset += ": ";
         }
 
+        String field_txt = fields[draw_index].txt;
+        if (fields[draw_index].ftxt.length() > 0) {
+          field_txt = fields[draw_index].ftxt;
+        }
         if (double_time && (fields_sec + draw_index) != NULL) {
           if (fields_sec[draw_index].valid) {
-            asset += fields[draw_index].txt;
+            asset += field_txt;
             asset + "   -  ";
             asset += fields_sec[draw_index].txt;
           } else {
-            asset += fields[draw_index].txt;
+            asset += field_txt;
           }
         } else {
-          asset += fields[draw_index].txt;
+          asset += field_txt;
         }
         SetAsset(draw_index + 1, &asset);
 
@@ -228,6 +304,11 @@ class MenuPanel {
       if (fields[index].action == NULL)return;
 
       fields[index].action();
+    }
+
+    void setCursor(int x, int y) {
+      c1 = x;
+      c2 = y;
     }
 
     void UpdateField(byte index, String txt, voidFunc action = NULL, bool numbered = false) {
@@ -252,6 +333,12 @@ class MenuPanel {
 
       fields[index].txt = txt;
       fields[index].valid = true;
+    }
+
+    void UpdateField_FTxt(byte index, String txt) {
+      if (index >= fields_count)return;
+
+      fields[index].ftxt = txt;
     }
 
     void SetSecoundaryField(byte index, String txt) {
