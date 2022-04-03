@@ -74,8 +74,10 @@ void DrawCurrentMenuGC() {
 
   if (menu == 0) {
     String asset = "";
+    String txt = "Press 0 to enter menu!";
+    SetAsset(3, &txt);
+    
     SetAsset(2, &asset);
-    SetAsset(3, &asset);
     SetAsset(4, &asset);
     SetAsset(5, &asset);
     SetAsset(6, &asset);

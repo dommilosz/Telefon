@@ -8,9 +8,9 @@ void i2cGcardRenderLoop(void *arg) {
 void i2cGcardRender() {
   gI2C.InitIfNot();
   
-  gI2C.Objects_Create(1, 2);
-  gI2C.Objects_Move(1, 0, 0, 0);
-  gI2C.Objects_TextAsset(1, 11);
+  gI2C.Objects_Create(14, 2);
+  gI2C.Objects_Move(14, 0, 0, 0);
+  gI2C.Objects_TextAsset(14, 11);
 
   gI2C.Objects_Create(11, 2);
   gI2C.Objects_Move(11, 0, 160, 0);
@@ -21,7 +21,7 @@ void i2cGcardRender() {
   }
   DrawCurrentMenuGC();
   if (gc_changed) {
-    gI2C.Redraw();
+    //gI2C.Redraw();
     gc_changed = false;
   }
 }
