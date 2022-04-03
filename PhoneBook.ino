@@ -8,8 +8,9 @@ void getPhoneBook() {
   }
 
   TakeATSemaphore();
-  gsm.getPhoneBookEntries(Cb_PhoneBook, 1, 128);
+  gsm.getPhoneBookEntries(Cb_PhoneBook, 1, 99);
   ReleaseATSemaphore();
+
 
   pe_pages_count = ((pe_count - 1) / 7) + 1;
 }

@@ -265,7 +265,7 @@ class MenuPanel {
         String asset = "";
         if (draw_index >= fields_count) {
           SetAsset(draw_index + 1, &asset);
-          break;
+          continue;
         }
         if (!fields[draw_index].valid) {
           continue;
@@ -283,7 +283,7 @@ class MenuPanel {
         if (double_time && (fields_sec + draw_index) != NULL) {
           if (fields_sec[draw_index].valid) {
             asset += field_txt;
-            asset + "   -  ";
+            asset += "   -  ";
             asset += fields_sec[draw_index].txt;
           } else {
             asset += field_txt;

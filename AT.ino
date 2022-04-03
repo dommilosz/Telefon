@@ -30,6 +30,7 @@ int CheckConnection() {
   long diffCREG = current - lastCREG;
 
   if (diffOK > 500) {
+    gsm.setBaudrate(115200);
     if (TestAT()) {
       lastOK = millis();
     } else if (diffOK > 15000) {
@@ -112,7 +113,7 @@ void FetchPE() {
 bool at_semaphore = false;
 void TakeATSemaphore() {
   while (at_semaphore) {
-    coop_idle(20);
+    coop_idle(100);
   }
   at_semaphore = true;
 }

@@ -1,6 +1,6 @@
 void setup() {
   Serial.begin(115200);
-  Serial2.begin(57600);
+  Serial2.begin(115200);
   Serial.setTimeout(1000);
   pixels.begin();
   SetLEDColor(0, 255, 0);
@@ -16,8 +16,10 @@ void setup() {
 void loop() {
   ExecCommand(&Serial);
 
-  while (Serial2.available()) {
-    Serial.write(Serial2.read());
+  if (!at_semaphore && Serial2.available()) {
+    while (Serial2.available()) {
+      Serial.write(Serial2.read());
+    }
   }
 
   AT_STATUS = CheckConnection();
