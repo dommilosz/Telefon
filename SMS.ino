@@ -46,14 +46,22 @@ void switchSMS(String status) {
   sms_pages_count = ((sms_count - 1) / 7) + 1;
 }
 
-SMSStruct GetSms(int index, bool read = false) {
+SMSStruct *_GetSms(int index, bool read = false) {
   TakeATSemaphore();
   SMSStruct sms = gsm.read(index, read);
   ReleaseATSemaphore();
-  return sms;
+
+  memcpy(task_mem_buff, &sms, sizeof(SMSStruct));
+  
+  return (SMSStruct*)task_mem_buff;
 }
 
-void ReadSMS() {
+SMSStruct GetSms(int index, bool read = false) {
+  SMSStruct *sms = (SMSStruct*)DelegateTask((ptrRetFunc)_GetSms);
+  return *sms;
+}
+
+void *_ReadSMS() {
   sms_count = 0;
   TakeATSemaphore();
   gsm.setTextMode(true);
@@ -72,7 +80,13 @@ void ReadSMS() {
   Serial.print(sms_count);
   ReleaseATSemaphore();
   switchSMS(l_status);
+  return NULL;
 }
+
+void ReadSMS() {
+  DelegateTask(_ReadSMS);
+}
+
 
 void Cb_SMS(SMSStruct sms) {
   smses[sms_count] = sms;

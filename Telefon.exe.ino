@@ -59,6 +59,8 @@ GSMSim gsm(Serial2);
 typedef void (* voidFunc)();
 typedef void (* strFunc)(String r);
 typedef void (* intFunc)(int r);
+typedef void *(* ptrRetFunc)();
+
 class MenuPanel;
 
 struct SMSStruct2 {
@@ -94,6 +96,41 @@ struct MenuField {
   voidFunc action;
   bool valid, numbered;
 };
+
+struct MainThreadTask {
+  int status = 0;
+  void *return_data;
+  ptrRetFunc func;
+};
+
+byte task_mem_buff[128];
+MainThreadTask tasks[16];
+int task_index = 0;
+void *DelegateTask(ptrRetFunc f) {
+  while (task_index >= 16){
+    coop_idle(100);
+  }
+  
+  MainThreadTask *task = tasks + task_index;
+
+  task->status = 0;
+  task->func = f;
+  task_index++;
+
+  while (task->status != 0) {
+    coop_idle(50);
+  }
+  return task->return_data;
+}
+
+void ExecuteTaskQueue() {
+  if (task_index < 1)return;
+  task_index--;
+  MainThreadTask *task = tasks + task_index;
+  task->return_data = task->func();
+  task->status = 1;
+}
+
 
 bool gc_changed = false;
 void SetAsset(int asset, String *txt) {
