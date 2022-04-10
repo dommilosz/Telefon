@@ -6,8 +6,9 @@ void i2cGcardRenderLoop(void *arg) {
 }
 
 void i2cGcardRender() {
+  if (gI2C.IsConnected() == 0)return;
   gI2C.InitIfNot();
-  
+
   gI2C.Objects_Create(14, 2);
   gI2C.Objects_Move(14, 0, 0, 0);
   gI2C.Objects_TextAsset(14, 11);
