@@ -4,6 +4,9 @@ void ExecCommand(Stream *stream) {
     if (c == '\r') {
       TakeATSemaphore();
       Serial2.print(buff + "\r");
+      while (Serial2.available()) {
+        Serial.write(Serial2.read());
+      }
       ReleaseATSemaphore();
       buff = "";
     }

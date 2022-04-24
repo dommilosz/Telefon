@@ -12,7 +12,8 @@
 #define PIN_HANG  3
 ButtonDebounce hng_button(PIN_HANG, 250);
 
-#define PIN_RGB   4
+#define PIN_RGB   11
+#define PIN_AT_STATUS   10
 
 #define STATUS_OK 0
 #define STATUS_NOAT 1

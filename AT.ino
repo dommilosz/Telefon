@@ -29,6 +29,10 @@ int CheckConnection() {
   long diffOK = current - lastOK;
   long diffCREG = current - lastCREG;
 
+  if(!digitalRead(PIN_AT_STATUS)){
+    return STATUS_NOAT;
+  }
+  
   if (diffOK > 500) {
     gsm.setBaudrate(115200);
     if (TestAT()) {
@@ -49,6 +53,7 @@ int CheckConnection() {
     op_name = String(gsm.operatorNameFromSim());
     ReleaseATSemaphore();
     FetchPIN();
+    gsm.setAudioChannel(1);
   }
 
   if (status_cache.service != 1) {
