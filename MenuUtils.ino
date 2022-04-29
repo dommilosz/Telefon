@@ -17,11 +17,7 @@ void UpdateLED() {
   }
 
   if (AT_STATUS == STATUS_CALL) {
-    if ((loopI % 300) > 150) {
-      SetLEDColor(255, 0, 0);
-    } else {
-      SetLEDColor(255, 0, 0);
-    }
+    SetLEDColor(0, 0, 255);
     return;
   }
 

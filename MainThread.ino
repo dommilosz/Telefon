@@ -13,12 +13,25 @@ void setup() {
   board_buffor[0] = 255;
 }
 
+int ring_find_status = 0;
 void loop() {
   ExecCommand(&Serial);
 
   if (!at_semaphore && Serial2.available()) {
     while (Serial2.available()) {
-      Serial.write(Serial2.read());
+      char c = Serial2.read();
+      
+      if(c=='R')ring_find_status=1;
+      else if(c=='I' && ring_find_status == 1)ring_find_status=2;
+      else if(c=='N' && ring_find_status == 2)ring_find_status=3;
+      else if(c=='G' && ring_find_status == 3)ring_find_status=4;
+      else ring_find_status = 0;
+
+      if(ring_find_status == 4){
+        //SetLEDColor(255, 255, 255);
+      }
+      
+      Serial.write(c);
     }
   }
 
