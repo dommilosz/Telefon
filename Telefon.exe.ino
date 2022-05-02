@@ -3,6 +3,7 @@
 #include <GSMSim.h>
 #include "coop_threads.h"
 #include <ButtonDebounce.h>
+#include "PicoEasyReflash.h"
 
 #define THREAD_STACK_SIZE 0x500U
 
