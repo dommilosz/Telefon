@@ -8,6 +8,17 @@ void setup1() {
   I2CCom.OnData = OnInterrupt;
   I2CCom.Ignore(0x27);
 
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(100);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(100);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(100);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(100);
+  WD_Init();
+
   coop_sched_thread(refresh_screen, "refresh_lcd", THREAD_STACK_SIZE, NULL);
   coop_sched_thread(loop_5ms, "loop_5ms", THREAD_STACK_SIZE, NULL);
   coop_sched_thread(loop_1s, "loop_1s", THREAD_STACK_SIZE, NULL);
@@ -37,6 +48,7 @@ void HandleBuffer() {
 void loop_5ms(void *arg) {
   while (true) {
     FetchBoard();
+    hng_button.update();
     coop_idle(5);
   }
 }
@@ -65,12 +77,15 @@ void refresh_screen(void *arg) {
   }
 }
 
+bool _isLEDOn = false;
 void loop_1s(void *arg) {
   while (true) {
     menuItem++;
     if (menuItem > 9) {
       menuItem = 0;
     }
+    _isLEDOn = !_isLEDOn;
+    digitalWrite(LED_BUILTIN, _isLEDOn);
     coop_idle(1000);
   }
 }

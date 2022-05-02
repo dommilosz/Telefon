@@ -36,7 +36,6 @@ void loop() {
   }
 
   AT_STATUS = CheckConnection();
-  hng_button.update();
   ExecuteTaskQueue();
 }
 
