@@ -18,6 +18,7 @@ char *BufferToCString(byte *buffer, int count) {
 }
 
 void SetLEDColor(uint8_t r, uint8_t g, uint8_t b) {
+  pixels.clear(); 
   pixels.setPixelColor(0, pixels.Color(r, g, b));
   pixels.show();   // Send the updated pixel colors to the hardware.
 }

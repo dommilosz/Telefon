@@ -100,5 +100,5 @@ void Menu_Back() {
 }
 
 inline void MenuPanel::AddExitField() {
-  AddField("EXIT",Menu_Back);
+  AddField("EXIT", Menu_Back);
 }

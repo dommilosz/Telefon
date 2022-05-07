@@ -200,7 +200,7 @@ void PIN_Change_PIN() {
 
 void PIN_Enter_PIN() {
   if (pe_error) {
-    
+
   } else if (pin_status == 2) {
     ShowInput(setPin, "Enter PUK:");
   } else {

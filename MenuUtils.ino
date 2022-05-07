@@ -1,4 +1,5 @@
 void UpdateLED() {
+  Serial.println("update led");
   if (AT_STATUS == STATUS_NOAT) {
     SetLEDColor(255, 0, 0);
     return;
@@ -72,7 +73,7 @@ void DrawCurrentMenuGC() {
     String asset = "";
     String txt = "Press 0 to enter menu!";
     SetAsset(3, &txt);
-    
+
     SetAsset(2, &asset);
     SetAsset(4, &asset);
     SetAsset(5, &asset);

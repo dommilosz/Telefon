@@ -7,6 +7,10 @@ void setup1() {
   I2CCom.OnDeviceDisconnected = OnDisconnected;
   I2CCom.OnData = OnInterrupt;
   I2CCom.Ignore(0x27);
+  I2CCom.Ignore(0x28);
+
+  pixels.begin();
+  SetLEDColor(0, 255, 0);
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -18,6 +22,7 @@ void setup1() {
   digitalWrite(LED_BUILTIN, LOW);
   delay(100);
   WD_Init();
+  InitInterrupt();
 
   coop_sched_thread(refresh_screen, "refresh_lcd", THREAD_STACK_SIZE, NULL);
   coop_sched_thread(loop_5ms, "loop_5ms", THREAD_STACK_SIZE, NULL);
@@ -56,7 +61,8 @@ void loop_5ms(void *arg) {
 void i2cScan(void *arg) {
   while (true) {
     I2CCom.ScanDevices();
-    coop_idle(5);
+    WD_SendRefresh();
+    coop_idle(50);
   }
 }
 
@@ -64,12 +70,7 @@ void refresh_screen(void *arg) {
   while (true) {
     lcd.noCursor();
     DrawCurrentMenu();
-
-    if ((AT_STATUS != _AT_STATUS) || (loopI % 5) == 0) {
-      _AT_STATUS = AT_STATUS;
-      UpdateLED();
-    }
-
+    UpdateLED();
     int8_t data[1];
     data[0] = menu == MenuInput_MENU_ID;
     I2CCom.SendDataByID(20, 0x10, data, 1);
@@ -109,4 +110,10 @@ void ButtonAction(bool isLong) {
       board_buffi--;
     }
   }
+}
+
+void InitInterrupt() {
+  attachInterrupt(digitalPinToInterrupt(PIN_INPUT), Board_Int, RISING);
+  //attachInterrupt(digitalPinToInterrupt(PIN_HANG), Hang_Int, CHANGE);
+  hng_button.setCallback(Hang_Int);
 }

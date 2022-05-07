@@ -12,14 +12,21 @@ void Board_Int() {
   }
 }
 
-void Hang_Int(const int hangState) {
+int _hangState = 0;
+void *_Hang_Int() {
   TakeATSemaphore();
-  if (hangState) {
+  if (_hangState) {
     gsm.hangoff();
   } else {
     gsm.answer();
   }
   ReleaseATSemaphore();
+  return NULL;
+}
+
+void Hang_Int(const int hangState) {
+  _hangState = hangState;
+  DelegateTask(_Hang_Int);
 }
 
 void FetchBoard() {

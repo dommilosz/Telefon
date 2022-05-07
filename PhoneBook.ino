@@ -16,7 +16,7 @@ void *_getPhoneBook() {
   return NULL;
 }
 
-void getPhoneBook(){
+void getPhoneBook() {
   DelegateTask(_getPhoneBook);
 }
 

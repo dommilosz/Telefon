@@ -13,7 +13,7 @@
 #define PIN_HANG  3
 ButtonDebounce hng_button(PIN_HANG, 250);
 
-#define PIN_RGB   11
+#define PIN_RGB   12
 #define PIN_AT_STATUS   10
 
 #define STATUS_OK 0
@@ -35,7 +35,6 @@ long lastts = 0;
 String b = "";
 
 uint8_t AT_STATUS = STATUS_OK;
-uint8_t _AT_STATUS = STATUS_OK;
 int loopI = 0;
 int loopI500 = 0;
 int menu = 0;
@@ -54,7 +53,7 @@ bool pe_error = false;
 
 String LastMenuMsg = "";
 
-Adafruit_NeoPixel pixels(1, PIN_RGB, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels(1, PIN_RGB, NEO_RGB + NEO_KHZ800);
 LiquidCrystal_I2C lcd(0x27, 20, 4, &Wire1);
 GSMSim gsm(Serial2);
 
@@ -109,10 +108,10 @@ byte task_mem_buff[128];
 MainThreadTask tasks[16];
 int task_index = 0;
 void *DelegateTask(ptrRetFunc f) {
-  while (task_index >= 16){
+  while (task_index >= 16) {
     coop_idle(100);
   }
-  
+
   MainThreadTask *task = tasks + task_index;
 
   task->status = 0;

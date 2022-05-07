@@ -52,7 +52,7 @@ SMSStruct *_GetSms(int index, bool read = false) {
   ReleaseATSemaphore();
 
   memcpy(task_mem_buff, &sms, sizeof(SMSStruct));
-  
+
   return (SMSStruct*)task_mem_buff;
 }
 
@@ -66,7 +66,7 @@ void *_ReadSMS() {
   TakeATSemaphore();
   gsm.setTextMode(true);
   ReleaseATSemaphore();
-  
+
   for (int i = 0; i < 128; i++) {
     smses[i].error = true;
   }
@@ -132,7 +132,7 @@ void NewSMS_TextView() {
   ShowTextView(sms_text);
 }
 
-void NewSMS_Send(){
+void NewSMS_Send() {
   NewSMS_Send_Invoke();
 }
 
@@ -140,8 +140,8 @@ void NewSMS_Send_Invoke() {
   if (sms_number.length() > 2 && sms_text.length() > 0) {
     char number[sms_number.length()];
     char text[sms_text.length()];
-    sms_number.toCharArray(number, sms_number.length()+1);
-    sms_text.toCharArray(text, sms_text.length()+1);
+    sms_number.toCharArray(number, sms_number.length() + 1);
+    sms_text.toCharArray(text, sms_text.length() + 1);
     TakeATSemaphore();
     if (gsm.send(number, text)) {
       Menu_Back();

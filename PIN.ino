@@ -13,7 +13,7 @@ void setPin(String input) {
   Serial.println(c);
   Serial.println(input);
 
-  
+
   if (pin_status == 1) {
     TakeATSemaphore();
     if (gsm.enterPinCode(c)) {
