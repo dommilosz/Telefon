@@ -23,7 +23,7 @@ void i2cGcardRender() {
   }
   DrawCurrentMenuGC();
   if (gc_changed) {
-    //gI2C.Redraw();
+    gI2C.Redraw();
     gc_changed = false;
   }
 

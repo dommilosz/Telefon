@@ -277,7 +277,18 @@ class MenuPanel {
       if (draw_override != NULL) {
         draw_override();
         SetAsset(1, &primary_line);
-        SetAsset(2, &secondary_line);
+        String sls = "";
+        int line_len = 0;
+        for(int i = 0;i<secondary_line.length();i++){
+          char c = secondary_line[i];
+          if(line_len > 45 && c == ' '){
+            sls += "\n";
+            line_len = 0;
+          }
+          line_len += 1;
+          sls += c;
+        }
+        SetAsset(2, &sls);
 
         SetAsset(3, &additional_info);
         SetAsset(4, &additional_info);
