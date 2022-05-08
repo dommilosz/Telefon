@@ -16,6 +16,6 @@ If you connect by I2CCom my Graphics Card [link here](https://github.com/dommilo
 
 # Schematic
 
-Everything is powered by the same 5V stable power supply with at least a few amps of current.  
+Everything is powered by the same 5V stable power supply with at least a few amps of current. USB Hub is there for I2CCom
 
 ![image](https://user-images.githubusercontent.com/54410730/167308553-8880e31e-c8fa-444a-8582-a00643255efd.png)
