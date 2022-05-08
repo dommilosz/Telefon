@@ -54,6 +54,7 @@ void loop_5ms(void *arg) {
   while (true) {
     FetchBoard();
     hng_button.update();
+    ExecCommand(&Serial);
     coop_idle(5);
   }
 }

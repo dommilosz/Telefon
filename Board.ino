@@ -49,4 +49,5 @@ void BufferPush(byte b) {
     board_buffor[board_buffi] = b;
     board_buffi++;
   }
+  FetchBoard();
 }

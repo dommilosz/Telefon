@@ -4,3 +4,9 @@
 [submodule "libraries/GSMSim"]
 	path = libraries/GSMSim
 	url = https://github.com/dommilosz/GSMSim
+[submodule "libraries/I2CCom"]
+	path = libraries/I2CCom
+	url = https://github.com/dommilosz/I2CCom
+[submodule "libraries/graphics-card-lib"]
+	path = libraries/graphics-card-lib
+	url = https://github.com/dommilosz/graphics-card-lib

@@ -1,13 +1,23 @@
+void *_SendBuff() {
+  TakeATSemaphore();
+  Serial2.print(buff + "\r");
+  Serial.print(buff + "\r");
+  while (Serial2.available()) {
+    Serial.write(Serial2.read());
+  }
+  ReleaseATSemaphore();
+  return NULL;
+}
+
+void SendBuff(){
+  DelegateTask(_SendBuff);
+}
+
 void ExecCommand(Stream *stream) {
   while (stream->available()) {
     char c = stream->read();
     if (c == '\r') {
-      TakeATSemaphore();
-      Serial2.print(buff + "\r");
-      while (Serial2.available()) {
-        Serial.write(Serial2.read());
-      }
-      ReleaseATSemaphore();
+      SendBuff();
       buff = "";
     }
     buff += c;

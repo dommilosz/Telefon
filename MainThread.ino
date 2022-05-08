@@ -10,8 +10,6 @@ void setup() {
 
 int ring_find_status = 0;
 void loop() {
-  ExecCommand(&Serial);
-
   if (!at_semaphore && Serial2.available()) {
     while (Serial2.available()) {
       char c = Serial2.read();

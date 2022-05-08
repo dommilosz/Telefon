@@ -1,5 +1,4 @@
 void UpdateLED() {
-  Serial.println("update led");
   if (AT_STATUS == STATUS_NOAT) {
     SetLEDColor(255, 0, 0);
     return;

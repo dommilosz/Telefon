@@ -11,6 +11,7 @@ void RegisterMenus() {
   panel->AddField("SETTINGS", Menu_Show(MenuSettings_MENU_ID));
   panel->AddField("PHONEBOOK", Menu_Show(MenuPhoneBook_Pre_MENU_ID));
   panel->AddField("TEST UI", Menu_Show(TEST_UI_MENU_ID));
+  panel->AddField("GRA", StartGame);
 
   panel = RegisterMenu(MenuStatus_MENU_ID, "STA", false, false);
   panel->AddExitField();
@@ -88,6 +89,11 @@ void RegisterMenus() {
   panel->AddField("T: ", NewSMS_ChangeText);
   panel->AddField("TextView", NewSMS_TextView);
   panel->AddField("SEND", NewSMS_Send);
+
+  panel = RegisterMenu(Game_MENU_ID, "GRA", true, false);
+  panel->AddExitField();
+  panel->actionCb = GameActionCb;
+  
 
   registerInputMenus();
 

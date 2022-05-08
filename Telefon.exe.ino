@@ -3,7 +3,6 @@
 #include <GSMSim.h>
 #include "coop_threads.h"
 #include <ButtonDebounce.h>
-#include "PicoEasyReflash.h"
 
 #define THREAD_STACK_SIZE 0x500U
 
@@ -87,6 +86,7 @@ const byte MenuPhoneBook_MENU_ID = 15;
 const byte MenuPhoneBook_View_MENU_ID = 16;
 const byte TEST_UI_MENU_ID = 17;
 const byte MenuSMS_New_MENU_ID = 18;
+const byte Game_MENU_ID = 19;
 
 String l_status = "ALL";
 String buff = "";
@@ -118,7 +118,7 @@ void *DelegateTask(ptrRetFunc f) {
   task->func = f;
   task_index++;
 
-  while (task->status != 0) {
+  while (task->status == 0) {
     coop_idle(50);
   }
   return task->return_data;
@@ -140,6 +140,12 @@ void SetAsset(int asset, String *txt) {
   txt->toCharArray(buff, length + 1);
   buff[length + 1] = 0;
   if (gI2C.WriteAssetOrCRC(asset, (uint8_t*)buff, sizeof(buff)) != 250) {
+    gc_changed = true;
+  }
+}
+
+void SetAsset(int asset, uint8_t *buff, int length) {
+  if (gI2C.WriteAssetOrCRC(asset, buff, length) != 250) {
     gc_changed = true;
   }
 }
