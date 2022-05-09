@@ -6,6 +6,28 @@
 
 #define THREAD_STACK_SIZE 0x500U
 
+#define throwError(err) \
+  { \
+    Serial.print("\nUnexpected exception in:"); \
+    Serial.print(__FILE__); \
+    Serial.print(" line: "); \
+    Serial.println(__LINE__); \
+    Serial.println(err); \
+    Serial.println(); \
+  }
+
+
+#define AssertCore(_core) \
+  { \
+    uint8_t core = GetCoreNumber(); \
+    if(core != _core) \
+    { \
+      throwError("Core Assertion failed"); \
+      Serial.print("Expected: "); Serial.println(_core); \
+      Serial.print("Found: "); Serial.println(core); \
+    } \
+  }
+
 #define PIN_INPUT 2
 #define InputRead() digitalRead(PIN_INPUT)
 
@@ -49,6 +71,9 @@ byte sms_page = 0;
 int sms_menu_item = 0;
 int selected_sms = -1;
 bool pe_error = false;
+
+int *sp_core1;
+int *sp_core2;
 
 String LastMenuMsg = "";
 
@@ -108,6 +133,10 @@ byte task_mem_buff[128];
 MainThreadTask tasks[16];
 int task_index = 0;
 void *DelegateTask(ptrRetFunc f) {
+  if (GetCoreNumber() == 0) {
+    return f();
+  }
+
   while (task_index >= 16) {
     coop_idle(100);
   }
@@ -285,9 +314,9 @@ class MenuPanel {
         SetAsset(1, &primary_line);
         String sls = "";
         int line_len = 0;
-        for(int i = 0;i<secondary_line.length();i++){
+        for (int i = 0; i < secondary_line.length(); i++) {
           char c = secondary_line[i];
-          if(line_len > 45 && c == ' '){
+          if (line_len > 45 && c == ' ') {
             sls += "\n";
             line_len = 0;
           }

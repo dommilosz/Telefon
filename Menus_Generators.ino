@@ -158,18 +158,14 @@ void SMSViewAction_TextView() {
 
 void *_SMSViewAction_Mark_Read() {
   SMSStruct sms = *current_sms;
-  TakeATSemaphore();
   gsm.read(sms.id, true);
-  ReleaseATSemaphore();
   ReadSMS();
   return NULL;
 }
 
 void *_SMSViewAction_Delete() {
   SMSStruct sms = *current_sms;
-  TakeATSemaphore();
   gsm.deleteOne(sms.id);
-  ReleaseATSemaphore();
   menus[menu].Back();
   ReadSMS();
   return NULL;
@@ -200,7 +196,7 @@ void GenerateFields_PIN(int draw_index) {
       data += ("Enable PIN");
     }
 
-    menus[menu].UpdateField(draw_index, sms.date, PIN_Enter_PIN);
+    menus[menu].UpdateField(draw_index, data, PIN_Enter_PIN);
   }
 }
 
@@ -272,9 +268,7 @@ void PEViewAction_Edit() {
 
 void *_PEViewAction_Delete() {
   PhoneBookEntry pe = *current_pe;
-  TakeATSemaphore();
   gsm.deletePhoneBookEntry(pe.id);
-  ReleaseATSemaphore();
   menu = MenuPhoneBook_MENU_ID;
   getPhoneBook();
   return NULL;

@@ -1,20 +1,27 @@
-bool TestAT() {
-  TakeATSemaphore();
+void *_TestAT() {
   bool v = gsm.checkConnection(1);
-  ReleaseATSemaphore();
-  return v;
+  return (void *)v;
+}
+
+bool TestAT() {
+  return (bool)DelegateTask(_TestAT);
 }
 
 GSMStatus status_cache;
 
-void VoiceCall(String * number) {
-  Serial.println(*number);
-  TakeATSemaphore();
-  bool resp = gsm.call(number);
-  ReleaseATSemaphore();
+String *__number;
+void *_VoiceCall() {
+  Serial.println(*__number);
+  bool resp = gsm.call(__number);
   if (!resp) {
     LastMenuMsg = "ERR: " + resp;
   }
+  return NULL;
+}
+
+void VoiceCall(String *number){
+  __number = number;
+  DelegateTask(_VoiceCall);
 }
 
 String op_name = "";
@@ -25,6 +32,7 @@ long lastOK   = -100000;
 long lastCREG = -100000;
 
 int CheckConnection() {
+  AssertCore(0);
   long current = millis();
   long diffOK = current - lastOK;
   long diffCREG = current - lastCREG;
@@ -45,13 +53,9 @@ int CheckConnection() {
   if (diffCREG > 30000 || (diffCREG > 5000 && (!status_cache.service || pe_error))) {
     //+CIND: 5,0,0,0,0,0,1
     //+CIND:("battchg",(0-5)), ("signal",(0-5)), ("service",(0,1)), ("message",(0,1)),("call",(0,1)), ("roam",(0,1)), ("smsfull",(0,1))
-    TakeATSemaphore();
     status_cache = gsm.getStatus();
-    ReleaseATSemaphore();
     lastCREG = millis();
-    TakeATSemaphore();
     op_name = String(gsm.operatorName());
-    ReleaseATSemaphore();
     FetchPIN();
     gsm.setAudioChannel(1);
   }
@@ -85,23 +89,27 @@ int pe_pages_count = 0;
 
 int MemUsage[] = {0, 0};
 
-void FetchUsage() {
-  TakeATSemaphore();
+void *_FetchUsage() {
   gsm.getPreferredSMSStorage(MemUsage);
-  ReleaseATSemaphore();
+  return NULL;
+}
+
+void FetchUsage(){
+  DelegateTask(_FetchUsage);
+}
+
+void *_FetchPIN() {
+  pin_status = gsm.pinStatus();
+  _FetchPE();
+  return NULL;
 }
 
 void FetchPIN() {
-  TakeATSemaphore();
-  pin_status = gsm.pinStatus();
-  ReleaseATSemaphore();
-  FetchPE();
+  DelegateTask(_FetchPIN);
 }
 
-void FetchPE() {
-  TakeATSemaphore();
+void *_FetchPE() {
   int pe = gsm.getPinStatus();
-  ReleaseATSemaphore();
   pe_error = false;
   if (pe == 0) {
     pin_enabled = false;
@@ -113,16 +121,9 @@ void FetchPE() {
     Serial.println(pe);
     pe_error = true;
   }
+  return NULL;
 }
 
-bool at_semaphore = false;
-void TakeATSemaphore() {
-  while (at_semaphore) {
-    coop_idle(100);
-  }
-  at_semaphore = true;
-}
-
-void ReleaseATSemaphore() {
-  at_semaphore = false;
+void FetchPE() {
+  DelegateTask(_FetchPE);
 }

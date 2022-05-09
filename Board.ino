@@ -14,13 +14,11 @@ void Board_Int() {
 
 int _hangState = 0;
 void *_Hang_Int() {
-  TakeATSemaphore();
   if (_hangState) {
     gsm.hangoff();
   } else {
     gsm.answer();
   }
-  ReleaseATSemaphore();
   return NULL;
 }
 

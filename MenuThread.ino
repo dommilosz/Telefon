@@ -1,4 +1,6 @@
 void setup1() {
+  SetupCoreSP(1);
+  
   board_buffi = 0;
   RegisterMenus();
 
@@ -88,6 +90,7 @@ void loop_1s(void *arg) {
     }
     _isLEDOn = !_isLEDOn;
     digitalWrite(LED_BUILTIN, _isLEDOn);
+    
     coop_idle(1000);
   }
 }

@@ -1,11 +1,9 @@
 void *_SendBuff() {
-  TakeATSemaphore();
   Serial2.print(buff + "\r");
   Serial.print(buff + "\r");
   while (Serial2.available()) {
     Serial.write(Serial2.read());
   }
-  ReleaseATSemaphore();
   return NULL;
 }
 
@@ -51,13 +49,11 @@ void ExecCommand(Stream *stream) {
         }
       }
       if (c == 'h') {
-        TakeATSemaphore();
         if (stream->read() == '1') {
-          gsm.answer();
+          Hang_Int(0); //Answer
         } else {
-          gsm.hangoff();
+          Hang_Int(1); //Hang
         }
-        ReleaseATSemaphore();
       }
       buff = "";
     }

@@ -1,4 +1,78 @@
+
+char *__codepin;
 char puk[8];
+
+void *_EnterPinCode() {
+  if (gsm.enterPinCode(__codepin)) {
+    ShowTXTD("SUCCESS", 2);
+  } else {
+    ShowTXTD("ERROR", 2);
+  }
+  return NULL;
+}
+
+void EnterPinCode(char *c) {
+  __codepin = c;
+  DelegateTask(_EnterPinCode);
+}
+
+void *_DisablePinCode() {
+  if (gsm.disablePinCode(__codepin)) {
+    ShowTXTD("SUCCESS", 2);
+  } else {
+    ShowTXTD("ERROR", 2);
+  }
+  return NULL;
+}
+
+void *_EnablePinCode() {
+  if (gsm.enablePinCode(__codepin)) {
+    ShowTXTD("SUCCESS", 2);
+  } else {
+    ShowTXTD("ERROR", 2);
+  }
+  return NULL;
+}
+
+void EnablePinCode(char *c) {
+  __codepin = c;
+  DelegateTask(_EnablePinCode);
+}
+
+void DisablePinCode(char *c) {
+  __codepin = c;
+  DelegateTask(_DisablePinCode);
+}
+
+void *_EnterPukCode() {
+  if (gsm.enterPukCode(puk, __codepin)) {
+    ShowTXTD("SUCCESS", 2);
+  } else {
+    ShowTXTD("ERROR", 2);
+  }
+  return NULL;
+}
+
+void *_ChangePinCode() {
+  if (gsm.changePinCode(puk, __codepin)) {
+    ShowTXTD("SUCCESS", 2);
+  } else {
+    ShowTXTD("ERROR", 2);
+  }
+  return NULL;
+}
+
+void EnterPukCode(char *c) {
+  __codepin = c;
+  DelegateTask(_EnterPukCode);
+}
+
+void ChangePinCode(char *c) {
+  __codepin = c;
+  DelegateTask(_ChangePinCode);
+}
+
+
 void setPin(String input) {
   lcd.setCursor(0, 1);
   lcd.print("                    ");
@@ -15,13 +89,7 @@ void setPin(String input) {
 
 
   if (pin_status == 1) {
-    TakeATSemaphore();
-    if (gsm.enterPinCode(c)) {
-      ShowTXTD("SUCCESS", 2);
-    } else {
-      ShowTXTD("ERROR", 2);
-    }
-    ReleaseATSemaphore();
+    EnterPinCode(c);
   }
   if (pin_status == 2) {
     puk[input.length()] = 0;
@@ -30,21 +98,9 @@ void setPin(String input) {
     return;
   }
   else if (pin_enabled) {
-    TakeATSemaphore();
-    if (gsm.disablePinCode(c)) {
-      ShowTXTD("SUCCESS", 2);
-    } else {
-      ShowTXTD("ERROR", 2);
-    }
-    ReleaseATSemaphore();
+    DisablePinCode(c);
   } else {
-    TakeATSemaphore();
-    if (gsm.enablePinCode(c)) {
-      ShowTXTD("SUCCESS", 2);
-    } else {
-      ShowTXTD("ERROR", 2);
-    }
-    ReleaseATSemaphore();
+    EnablePinCode(c);
   }
   lcd.setCursor(0, 1);
   lcd.print("LOADING...          ");
@@ -56,13 +112,7 @@ void UnlockPUK(String newpin) {
   c[newpin.length()] = 0;
   newpin.toCharArray(c, newpin.length() + 1);
 
-  TakeATSemaphore();
-  if (gsm.enterPukCode(puk, c)) {
-    ShowTXTD("SUCCESS", 2);
-  } else {
-    ShowTXTD("ERROR", 2);
-  }
-  ReleaseATSemaphore();
+  EnterPukCode(c);
 }
 
 void changePin(String pin) {
@@ -76,11 +126,6 @@ void changePin2(String newpin) {
   char c[8];
   c[newpin.length()] = 0;
   newpin.toCharArray(c, newpin.length() + 1);
-  TakeATSemaphore();
-  if (gsm.changePinCode(puk, c)) {
-    lcd.print("SUCCESS");
-  } else {
-    lcd.print("ERROR");
-  }
-  ReleaseATSemaphore();
+
+  ChangePinCode(c);
 }

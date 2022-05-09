@@ -47,10 +47,7 @@ void switchSMS(String status) {
 }
 
 SMSStruct *_GetSms(int index, bool read = false) {
-  TakeATSemaphore();
   SMSStruct sms = gsm.read(index, read);
-  ReleaseATSemaphore();
-
   memcpy(task_mem_buff, &sms, sizeof(SMSStruct));
 
   return (SMSStruct*)task_mem_buff;
@@ -63,22 +60,17 @@ SMSStruct GetSms(int index, bool read = false) {
 
 void *_ReadSMS() {
   sms_count = 0;
-  TakeATSemaphore();
   gsm.setTextMode(true);
-  ReleaseATSemaphore();
 
   for (int i = 0; i < 128; i++) {
     smses[i].error = true;
   }
 
-  TakeATSemaphore();
   gsm.list(Cb_SMS, false);
-  ReleaseATSemaphore();
 
   Serial.println("\n[SMSCount:]\n");
   sms_pages_count = ((sms_count - 1) / 7) + 1;
   Serial.print(sms_count);
-  ReleaseATSemaphore();
   switchSMS(l_status);
   return NULL;
 }
@@ -136,20 +128,31 @@ void NewSMS_Send() {
   NewSMS_Send_Invoke();
 }
 
+char *__number2;
+char *__sms_text;
+void *_SendSMS() {
+  if (gsm.send(__number2, __sms_text)) {
+    Menu_Back();
+    ShowTXTD("SENT!", 4);
+  } else {
+    ShowTXTD("ERROR!", 4);
+  }
+  return NULL;
+}
+
+void SendSMS(char *number, char *text){
+  DelegateTask(_SendSMS);
+  __number2 = number;
+  __sms_text = text;
+}
+
 void NewSMS_Send_Invoke() {
   if (sms_number.length() > 2 && sms_text.length() > 0) {
     char number[sms_number.length()];
     char text[sms_text.length()];
     sms_number.toCharArray(number, sms_number.length() + 1);
     sms_text.toCharArray(text, sms_text.length() + 1);
-    TakeATSemaphore();
-    if (gsm.send(number, text)) {
-      Menu_Back();
-      ShowTXTD("SENT!", 4);
-    } else {
-      ShowTXTD("ERROR!", 4);
-    }
-    ReleaseATSemaphore();
+    SendSMS(number, text);
   } else {
     if (sms_number.length() <= 2) {
       ShowTXTD("SHORT NUMBER!", 4);

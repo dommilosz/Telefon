@@ -1,4 +1,6 @@
 void setup() {
+  SetupCoreSP(0);
+
   Serial.begin(115200);
   Serial2.begin(115200);
   Serial.setTimeout(1000);
@@ -10,7 +12,7 @@ void setup() {
 
 int ring_find_status = 0;
 void loop() {
-  if (!at_semaphore && Serial2.available()) {
+  if (Serial2.available()) {
     while (Serial2.available()) {
       char c = Serial2.read();
 

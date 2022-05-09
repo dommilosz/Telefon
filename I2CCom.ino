@@ -32,15 +32,9 @@ void OnInterrupt(int addr, int type, int length) {
       //long press...
       ButtonAction(true);
     } else if (c == 'C') {
-      //accept
-      TakeATSemaphore();
-      gsm.answer();
-      ReleaseATSemaphore();
+      Hang_Int(0); //Answer
     } else if (c == 'D') {
-      //hang
-      TakeATSemaphore();
-      gsm.hangoff();
-      ReleaseATSemaphore();
+      Hang_Int(1); //Hang
     }
 
   }
