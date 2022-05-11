@@ -17,6 +17,7 @@ int smsCount(String status) {
 
 void switchSMS(String status) {
   l_status = status;
+  sms_page = 0;
   int i2 = 0;
   for (int i = 0; i < 128; i++) {
     if (status == "ALL") {
@@ -47,6 +48,7 @@ void switchSMS(String status) {
 }
 
 SMSStruct *_GetSms(int index, bool read = false) {
+  AssertCore(0);
   SMSStruct sms = gsm.read(index, read);
   memcpy(task_mem_buff, &sms, sizeof(SMSStruct));
 
@@ -59,6 +61,7 @@ SMSStruct GetSms(int index, bool read = false) {
 }
 
 void *_ReadSMS() {
+  AssertCore(0);
   sms_count = 0;
   gsm.setTextMode(true);
 
@@ -68,9 +71,7 @@ void *_ReadSMS() {
 
   gsm.list(Cb_SMS, false);
 
-  Serial.println("\n[SMSCount:]\n");
   sms_pages_count = ((sms_count - 1) / 7) + 1;
-  Serial.print(sms_count);
   switchSMS(l_status);
   return NULL;
 }
@@ -88,8 +89,10 @@ void Cb_SMS(SMSStruct sms) {
 String sms_number;
 String sms_text;
 
-void SMS_Phonebook() {
-
+void SMS_Phonebook(PhoneBookEntry *pe) {
+  menus[MenuSMS_New_MENU_ID].Show();
+  NewSMS_ChangeNumber(pe->phoneno);
+  NewSMS_ChangeText("");
 }
 
 void NewSMS_Show() {
@@ -104,7 +107,7 @@ void NewSMS_ChangeNumber() {
 
 void NewSMS_ChangeNumber(String number) {
   sms_number = number;
-  String d = "N: ";
+  String d = "Numb: ";
   d += number;
   menus[menu].UpdateField_Txt(1, d);
 }
@@ -115,7 +118,7 @@ void NewSMS_ChangeText() {
 
 void NewSMS_ChangeText(String text) {
   sms_text = text;
-  String d = "T: ";
+  String d = "Text: ";
   d += text;
   menus[menu].UpdateField_Txt(2, d);
 }
@@ -131,6 +134,7 @@ void NewSMS_Send() {
 char *__number2;
 char *__sms_text;
 void *_SendSMS() {
+  AssertCore(0);
   if (gsm.send(__number2, __sms_text)) {
     Menu_Back();
     ShowTXTD("SENT!", 4);

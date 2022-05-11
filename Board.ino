@@ -14,6 +14,7 @@ void Board_Int() {
 
 int _hangState = 0;
 void *_Hang_Int() {
+  AssertCore(0);
   if (_hangState) {
     gsm.hangoff();
   } else {

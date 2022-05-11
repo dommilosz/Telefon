@@ -112,6 +112,7 @@ const byte MenuPhoneBook_View_MENU_ID = 16;
 const byte TEST_UI_MENU_ID = 17;
 const byte MenuSMS_New_MENU_ID = 18;
 const byte Game_MENU_ID = 19;
+const byte NewPhonebook_MENU_ID = 20;
 
 String l_status = "ALL";
 String buff = "";
@@ -352,6 +353,7 @@ class MenuPanel {
           continue;
         }
         if (!fields[draw_index].valid) {
+          SetAsset(draw_index + 1, &asset);
           continue;
         }
 

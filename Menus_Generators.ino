@@ -157,6 +157,7 @@ void SMSViewAction_TextView() {
 }
 
 void *_SMSViewAction_Mark_Read() {
+  AssertCore(0);
   SMSStruct sms = *current_sms;
   gsm.read(sms.id, true);
   ReadSMS();
@@ -164,6 +165,7 @@ void *_SMSViewAction_Mark_Read() {
 }
 
 void *_SMSViewAction_Delete() {
+  AssertCore(0);
   SMSStruct sms = *current_sms;
   gsm.deleteOne(sms.id);
   menus[menu].Back();
@@ -216,6 +218,7 @@ void PIN_Enter_PIN() {
 
 void PhoneBook_Launch() {
   getPhoneBook();
+  sms_page = 0;
   menus[MenuPhoneBook_MENU_ID].Show();
 }
 
@@ -223,7 +226,7 @@ void GenerateFields_PhoneBook(int draw_index) {
   menus[menu].additional_info = "";
   menus[menu].additional_info += sms_page + 1;
   menus[menu].additional_info += "/";
-  menus[menu].additional_info += sms_pages_count;
+  menus[menu].additional_info += pe_pages_count;
 
   if (draw_index > 0 && draw_index < 8) {
     PhoneBookEntry pe = phoneBook[(sms_page * 7) + (draw_index - 1)];
@@ -263,10 +266,11 @@ void PEViewAction_Call() {
 }
 
 void PEViewAction_Edit() {
-  //TODO: Add edit
+  NewPHB_ShowEdit(current_pe);
 }
 
 void *_PEViewAction_Delete() {
+  AssertCore(0);
   PhoneBookEntry pe = *current_pe;
   gsm.deletePhoneBookEntry(pe.id);
   menu = MenuPhoneBook_MENU_ID;
@@ -276,6 +280,10 @@ void *_PEViewAction_Delete() {
 
 void PEViewAction_Delete() {
   DelegateTask(_PEViewAction_Delete);
+}
+
+void _SMS_Phonebook(){
+  SMS_Phonebook(current_pe);
 }
 
 void GenerateFields_PE_View(int draw_index) {
@@ -291,6 +299,11 @@ void GenerateFields_PE_View(int draw_index) {
   if (draw_index == 2) {
     String data = "Type: ";
     data += pe.type;
+    menus[menu].UpdateField_Txt(draw_index, data);
+  }
+  if (draw_index == 3) {
+    String data = "ID: ";
+    data += pe.id;
     menus[menu].UpdateField_Txt(draw_index, data);
   }
 }

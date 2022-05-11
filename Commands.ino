@@ -1,4 +1,5 @@
 void *_SendBuff() {
+  AssertCore(0);
   Serial2.print(buff + "\r");
   Serial.print(buff + "\r");
   while (Serial2.available()) {

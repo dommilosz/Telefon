@@ -1,4 +1,5 @@
 void *_TestAT() {
+  AssertCore(0);
   bool v = gsm.checkConnection(1);
   return (void *)v;
 }
@@ -11,6 +12,7 @@ GSMStatus status_cache;
 
 String *__number;
 void *_VoiceCall() {
+  AssertCore(0);
   Serial.println(*__number);
   bool resp = gsm.call(__number);
   if (!resp) {
@@ -90,6 +92,7 @@ int pe_pages_count = 0;
 int MemUsage[] = {0, 0};
 
 void *_FetchUsage() {
+  AssertCore(0);
   gsm.getPreferredSMSStorage(MemUsage);
   return NULL;
 }
@@ -99,6 +102,7 @@ void FetchUsage(){
 }
 
 void *_FetchPIN() {
+  AssertCore(0);
   pin_status = gsm.pinStatus();
   _FetchPE();
   return NULL;
@@ -109,6 +113,7 @@ void FetchPIN() {
 }
 
 void *_FetchPE() {
+  AssertCore(0);
   int pe = gsm.getPinStatus();
   pe_error = false;
   if (pe == 0) {
@@ -117,8 +122,6 @@ void *_FetchPE() {
   else if (pe == 1) {
     pin_enabled = true;
   } else {
-    Serial.println("E57");
-    Serial.println(pe);
     pe_error = true;
   }
   return NULL;

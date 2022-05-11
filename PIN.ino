@@ -3,6 +3,7 @@ char *__codepin;
 char puk[8];
 
 void *_EnterPinCode() {
+  AssertCore(0);
   if (gsm.enterPinCode(__codepin)) {
     ShowTXTD("SUCCESS", 2);
   } else {
@@ -17,6 +18,7 @@ void EnterPinCode(char *c) {
 }
 
 void *_DisablePinCode() {
+  AssertCore(0);
   if (gsm.disablePinCode(__codepin)) {
     ShowTXTD("SUCCESS", 2);
   } else {
@@ -26,6 +28,7 @@ void *_DisablePinCode() {
 }
 
 void *_EnablePinCode() {
+  AssertCore(0);
   if (gsm.enablePinCode(__codepin)) {
     ShowTXTD("SUCCESS", 2);
   } else {
@@ -45,6 +48,7 @@ void DisablePinCode(char *c) {
 }
 
 void *_EnterPukCode() {
+  AssertCore(0);
   if (gsm.enterPukCode(puk, __codepin)) {
     ShowTXTD("SUCCESS", 2);
   } else {
@@ -54,6 +58,7 @@ void *_EnterPukCode() {
 }
 
 void *_ChangePinCode() {
+  AssertCore(0);
   if (gsm.changePinCode(puk, __codepin)) {
     ShowTXTD("SUCCESS", 2);
   } else {

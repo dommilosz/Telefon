@@ -11,7 +11,7 @@ void RegisterMenus() {
   panel->AddField("SETTINGS", Menu_Show(MenuSettings_MENU_ID));
   panel->AddField("PHONEBOOK", Menu_Show(MenuPhoneBook_Pre_MENU_ID));
   panel->AddField("TEST UI", Menu_Show(TEST_UI_MENU_ID));
-  panel->AddField("GRA", StartGame);
+  panel->AddField("GAME", StartGame);
 
   panel = RegisterMenu(MenuStatus_MENU_ID, "STA", false, false);
   panel->AddExitField();
@@ -56,7 +56,7 @@ void RegisterMenus() {
 
   panel = RegisterMenu(MenuPhoneBook_Pre_MENU_ID, "PHP", true, false);
   panel->AddExitField();
-  panel->AddField("NEW [WIP]", NULL);
+  panel->AddField("NEW", NewPHB_Show);
   panel->AddField("PHONEBOOK", PhoneBook_Launch);
 
   panel = RegisterMenu(MenuPhoneBook_MENU_ID, "PHB", true, true);
@@ -70,7 +70,7 @@ void RegisterMenus() {
   panel->AddExitField();
   panel->AddFields(4);
   panel->AddField("Call", PEViewAction_Call, true);
-  panel->AddField("SMS [WIP]", SMS_Phonebook, true);
+  panel->AddField("SMS", _SMS_Phonebook, true);
   panel->AddField("Edit", PEViewAction_Edit, true);
   panel->AddField("Delete", PEViewAction_Delete, true);
   panel->SetGenerateCb(GenerateFields_PE_View);
@@ -85,12 +85,19 @@ void RegisterMenus() {
 
   panel = RegisterMenu(MenuSMS_New_MENU_ID, "NSMS", true, false);
   panel->AddExitField();
-  panel->AddField("N: ", NewSMS_ChangeNumber);
-  panel->AddField("T: ", NewSMS_ChangeText);
+  panel->AddField("Num: ", NewSMS_ChangeNumber);
+  panel->AddField("Text: ", NewSMS_ChangeText);
   panel->AddField("TextView", NewSMS_TextView);
   panel->AddField("SEND", NewSMS_Send);
 
-  panel = RegisterMenu(Game_MENU_ID, "GRA", true, false);
+  panel = RegisterMenu(NewPhonebook_MENU_ID, "NPHB", true, false);
+  panel->AddExitField();
+  panel->AddField("Num: ", NewPHB_ChangeNumber);
+  panel->AddField("Name: ", NewPHB_ChangeName);
+  panel->AddField("ID: ", NewPHB_ChangeID);
+  panel->AddField("Add", NewPHB_Add);
+
+  panel = RegisterMenu(Game_MENU_ID, "GAME", true, false);
   panel->AddExitField();
   panel->actionCb = GameActionCb;
   
