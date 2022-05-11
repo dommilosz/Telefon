@@ -32,7 +32,7 @@ void FetchBoard() {
   long current = millis();
 
   if (board_count > 0 && current - lastInt > 500) {
-    BufferPush(board_count);
+    _BufferPush(board_count);
     board_count = 0;
   }
   if ((millis() - lastInt > 5000 || menu != 0 || board_buffor[0] == 0) && board_buffi) {
@@ -41,12 +41,16 @@ void FetchBoard() {
   }
 }
 
-void BufferPush(byte b) {
+void _BufferPush(byte b) {
   if (b == 10)b = 0;
   Serial.println(b);
   if (board_buffi < BOARD_MAX) {
     board_buffor[board_buffi] = b;
     board_buffi++;
   }
+}
+
+void BufferPush(byte b) {
+  _BufferPush(b);
   FetchBoard();
 }
