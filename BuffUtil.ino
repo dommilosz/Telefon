@@ -19,6 +19,10 @@ void SetLEDColor(uint8_t r, uint8_t g, uint8_t b) {
   pixels.show();   // Send the updated pixel colors to the hardware.
 }
 
+void SetLEDColor(uint8_t *rgb) {
+  SetLEDColor(rgb[0], rgb[1], rgb[2]);
+}
+
 String forceStringToBeLength(String msg, int length) {
   int l = msg.length();
   if (l > length) {
@@ -40,13 +44,21 @@ uint8_t GetCoreNumber() {
 
 void SetupCoreSP(uint8_t core) {
   int a = 0;
-  if(core==0){
+  if (core == 0) {
     sp_core1 = &a;
     return;
   }
-  if(core==1){
+  if (core == 1) {
     sp_core2 = &a;
     return;
   }
   throwError("Unknown core");
+}
+
+uint8_t rgb24to8(uint8_t *rgb) {
+  return rgb24to8(rgb[0], rgb[1], rgb[2]);
+}
+
+uint8_t rgb24to8(uint8_t r, uint8_t g, uint8_t b) {
+  return ((r * 8 / 256) << 5 | (g * 8 / 256) << 2 | (b * 4 / 256));
 }

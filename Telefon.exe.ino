@@ -28,6 +28,8 @@
     } \
   }
 
+#define GC_FIELD_MARGIN 30
+
 #define PIN_INPUT 2
 #define InputRead() digitalRead(PIN_INPUT)
 
@@ -50,6 +52,7 @@ I2CCom_Master I2CCom(&Wire1);
 GraphicsCardI2CCom gI2C(&I2CCom);
 
 const char *STATUS_STR[] = {"OK", "NOAT", "ERROR", "OTHER", "UNREG", "CALL"};
+const uint8_t STATUS_RGB[][3] = {{0, 255, 0}, {255, 0, 0}, {255, 0, 255}, {255, 255, 0}, {255, 0, 255}, {0, 0, 255}};
 const char *AT_STATUSES[] = {"battchg", "signal", "service", "message", "call", "roam", "smsfull"};
 
 long lastts = 0;
@@ -113,6 +116,8 @@ const byte TEST_UI_MENU_ID = 17;
 const byte MenuSMS_New_MENU_ID = 18;
 const byte Game_MENU_ID = 19;
 const byte NewPhonebook_MENU_ID = 20;
+const byte MenuDiagnostics = 21;
+const byte SelfTest_MENU_ID = 22;
 
 String l_status = "ALL";
 String buff = "";
@@ -122,6 +127,7 @@ struct MenuField {
   String ftxt;
   voidFunc action;
   bool valid, numbered;
+  int gcard_color = -1;
 };
 
 struct MainThreadTask {
@@ -358,8 +364,11 @@ class MenuPanel {
         }
 
         if (append_field_index || fields[draw_index].numbered) {
+          asset += (char)22;
+          asset += (char)156;
           asset += draw_index;
           asset += ": ";
+          asset += (char)23;
         }
 
         String field_txt = fields[draw_index].txt;
@@ -368,14 +377,37 @@ class MenuPanel {
         }
         if (double_time && (fields_sec + draw_index) != NULL) {
           if (fields_sec[draw_index].valid) {
+            if (fields[draw_index].gcard_color >= 0) {
+              asset += (char)22;
+              asset += (char)fields[draw_index].gcard_color;
+            }
             asset += field_txt;
+            if (fields_sec[draw_index].gcard_color >= 0) {
+              asset += (char)23;
+            }
             asset += "   -  ";
+            if (fields_sec[draw_index].gcard_color >= 0) {
+              asset += (char)22;
+              asset += (char)fields[draw_index].gcard_color;
+            }
             asset += fields_sec[draw_index].txt;
           } else {
+            if (fields[draw_index].gcard_color >= 0) {
+              asset += (char)22;
+              asset += (char)fields[draw_index].gcard_color;
+            }
             asset += field_txt;
           }
         } else {
+          if (fields[draw_index].gcard_color >= 0) {
+            asset += (char)22;
+            asset += (char)fields[draw_index].gcard_color;
+          }
           asset += field_txt;
+        }
+
+        if (fields[draw_index].gcard_color >= 0 || fields_sec[draw_index].gcard_color >= 0) {
+          asset += (char)23;
         }
         SetAsset(draw_index + 1, &asset);
 
@@ -435,10 +467,13 @@ class MenuPanel {
       fields_sec[index].valid = true;
     }
 
-    void AddField(String txt, voidFunc action = NULL, bool numbered = false) {
+    MenuField *AddField(String txt, voidFunc action = NULL, bool numbered = false) {
       fields_count++;
       UpdateField(fields_count - 1, txt, action);
-      fields[fields_count - 1].numbered = numbered;
+      MenuField *field = &fields[fields_count - 1];
+      field->numbered = numbered;
+      field->gcard_color = -1;
+      return field;
     }
 
     void RemoveField(byte index) {
@@ -486,4 +521,8 @@ MenuPanel *RegisterMenu(byte index, String code, bool append_field_index = false
   menus[index].id = index;
   menus[index].append_field_index = append_field_index;
   return &menus[index];
+}
+
+void reboot() {
+  while (1);
 }

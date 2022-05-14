@@ -1,32 +1,5 @@
 void UpdateLED() {
-  if (AT_STATUS == STATUS_NOAT) {
-    SetLEDColor(255, 0, 0);
-    return;
-  }
-  if (AT_STATUS == STATUS_ERROR) {
-    SetLEDColor(255, 0, 255);
-    return;
-  }
-  if (AT_STATUS == STATUS_OTHER) {
-    SetLEDColor(255, 255, 0);
-    return;
-  }
-  if (AT_STATUS == STATUS_UNREG) {
-    SetLEDColor(255, 0, 255);
-    return;
-  }
-
-  if (AT_STATUS == STATUS_CALL) {
-    SetLEDColor(0, 0, 255);
-    return;
-  }
-
-
-
-  if (AT_STATUS == STATUS_OK) {
-    SetLEDColor(0, 255, 0);
-    return;
-  }
+  SetLEDColor((uint8_t *)STATUS_RGB[AT_STATUS]);
 }
 
 void DrawCurrentMenu() {
@@ -62,10 +35,19 @@ void DrawCurrentMenu() {
 }
 
 void DrawCurrentMenuGC() {
-  String header = "ATos #";
+  String header = "ATos ";
+  
+  header += (char)22;
+  header += (char)rgb24to8(255, 255, 0);
+  header += "#";
+  header += (char)23;
+  
   header += menus[menu].code;
   header += "  ";
+  header += (char)22;
+  header += (char)rgb24to8((uint8_t *)STATUS_RGB[AT_STATUS]);
   header += STATUS_STR[AT_STATUS];
+  header += (char)23;
   SetAsset(11, &header);
 
   if (menu == 0) {

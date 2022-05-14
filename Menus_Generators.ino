@@ -282,28 +282,36 @@ void PEViewAction_Delete() {
   DelegateTask(_PEViewAction_Delete);
 }
 
-void _SMS_Phonebook(){
+void _SMS_Phonebook() {
   SMS_Phonebook(current_pe);
 }
 
 void GenerateFields_PE_View(int draw_index) {
   PhoneBookEntry pe = *current_pe;
-  if (draw_index == 0) {
+  if (draw_index == 1) {
     String data = "N: ";
     data += pe.phoneno;
     menus[menu].UpdateField_Txt(draw_index, data);
   }
-  if (draw_index == 1) {
+  if (draw_index == 2) {
     menus[menu].UpdateField_Txt(draw_index, pe.name);
   }
-  if (draw_index == 2) {
+  if (draw_index == 3) {
     String data = "Type: ";
     data += pe.type;
     menus[menu].UpdateField_Txt(draw_index, data);
   }
-  if (draw_index == 3) {
+  if (draw_index == 4) {
     String data = "ID: ";
     data += pe.id;
+    menus[menu].UpdateField_Txt(draw_index, data);
+  }
+}
+
+void GenerateFields_SelfTest(int draw_index) {
+  if (draw_index == 1) {
+    String data = "HANG: ";
+    data += hng_button.state()==HIGH?"HIGH":"LOW";
     menus[menu].UpdateField_Txt(draw_index, data);
   }
 }

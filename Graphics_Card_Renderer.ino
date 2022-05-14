@@ -51,12 +51,12 @@ void i2cGcardRender() {
   gI2C.InitIfNot();
 
   gI2C.Objects_Create(14, 2);
-  gI2C.Objects_Move(14, 0, 0, 0);
+  gI2C.Objects_Move(14, 0, GC_FIELD_MARGIN, GC_FIELD_MARGIN);
   gI2C.Objects_TextAsset(14, 11);
 
   gI2C.Objects_Create(11, 2);
 
-  gI2C.Objects_Move(11, 0, 160, 0);
+  gI2C.Objects_Move(11, 0, 160+GC_FIELD_MARGIN, GC_FIELD_MARGIN);
   gI2C.Objects_TextAsset(11, 12);
 
   for (int i = 0; i < 10; i++) {
@@ -88,7 +88,7 @@ void i2cGcardRender() {
 
 void GC_DrawMenuField(int index) {
   gI2C.Objects_Create(index, 2);
-  gI2C.Objects_Move(index, 0, 0, index * 20);
+  gI2C.Objects_Move(index, 0, GC_FIELD_MARGIN, (index * 20)+GC_FIELD_MARGIN);
   gI2C.Objects_TextAsset(index, index);
 }
 

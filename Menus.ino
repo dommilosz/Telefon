@@ -5,12 +5,9 @@ void RegisterMenus() {
 
   MenuPanel *panel = RegisterMenu(MenuSelect_MENU_ID, "SEL", true, false);
   panel->AddExitField();
-  panel->AddField("STATUS", Menu_Show(MenuStatus_MENU_ID));
-  panel->AddField("TIMINGS", Menu_Show(MenuTimings_MENU_ID));
   panel->AddField("SMS", ShowMenuAndFetchSMS);
-  panel->AddField("SETTINGS", Menu_Show(MenuSettings_MENU_ID));
   panel->AddField("PHONEBOOK", Menu_Show(MenuPhoneBook_Pre_MENU_ID));
-  panel->AddField("TEST UI", Menu_Show(TEST_UI_MENU_ID));
+  panel->AddField("SETTINGS", Menu_Show(MenuSettings_MENU_ID));
   panel->AddField("GAME", StartGame);
 
   panel = RegisterMenu(MenuStatus_MENU_ID, "STA", false, false);
@@ -47,6 +44,7 @@ void RegisterMenus() {
   panel = RegisterMenu(MenuSettings_MENU_ID, "SET", true, false);
   panel->AddExitField();
   panel->AddField("PIN", Menu_Show(MenuPIN_MENU_ID));
+  panel->AddField("Diagnostics", Menu_Show(MenuDiagnostics));
 
   panel = RegisterMenu(MenuPIN_MENU_ID, "PIN", true, false);
   panel->AddExitField();
@@ -100,7 +98,19 @@ void RegisterMenus() {
   panel = RegisterMenu(Game_MENU_ID, "GAME", true, false);
   panel->AddExitField();
   panel->actionCb = GameActionCb;
-  
+
+  panel = RegisterMenu(MenuDiagnostics, "DIAG", true, false);
+  panel->AddExitField();
+  panel->AddField("TEST UI", Menu_Show(TEST_UI_MENU_ID));
+  panel->AddField("STATUS", Menu_Show(MenuStatus_MENU_ID));
+  panel->AddField("TIMINGS", Menu_Show(MenuTimings_MENU_ID));
+  panel->AddField("SELF TEST", Menu_Show(SelfTest_MENU_ID));
+  panel->AddField("REBOOT", reboot);
+
+  panel = RegisterMenu(SelfTest_MENU_ID, "TEST", true, false);
+  panel->AddExitField();
+  panel->AddField("HANG: ", NULL);
+  panel->SetGenerateCb(GenerateFields_SelfTest);
 
   registerInputMenus();
 
@@ -113,5 +123,6 @@ void Menu_Back() {
 }
 
 inline void MenuPanel::AddExitField() {
-  AddField("EXIT", Menu_Back);
+  MenuField *ef = AddField("EXIT", Menu_Back);
+  ef->gcard_color = 224;
 }

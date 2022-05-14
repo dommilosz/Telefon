@@ -30,15 +30,22 @@ void Hang_Int(const int hangState) {
 
 void FetchBoard() {
   long current = millis();
+  bool shouldCall = hng_button.state() == HIGH;
 
   if (board_count > 0 && current - lastInt > 500) {
     _BufferPush(board_count);
+    if (shouldCall && (board_buffi > 1 || board_count < 10)) {
+      HandleBuffer();
+      board_buffi = 0;
+    }
     board_count = 0;
   }
   if ((millis() - lastInt > 5000 || menu != 0 || board_buffor[0] == 0) && board_buffi) {
     PrintBuffer(board_buffor, board_buffi);
     HandleBuffer();
+    return;
   }
+
 }
 
 void _BufferPush(byte b) {
